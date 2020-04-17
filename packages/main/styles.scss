@@ -1,0 +1,62 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.genericContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.generic_link {
+  cursor: pointer;
+  vertical-align: middle;
+  height: 80;
+  width: 80;
+}
+
+.right {
+  justify-content: flex-end;
+  align-items: center;
+  display: flex;
+}
+
+.left {
+  justify-content: flex-start;
+  align-items: center;
+  display: flex;
+}
+
+.date-more {
+  display: flex;
+  justify-content: space-between;
+  width: '100%';
+  align-items: center;
+  padding: 1rem;
+}
+
+.commentBox {
+  width: 70% !important;
+}
+
+.commentBlock {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.commentWrapper {
+  padding-bottom: 3rem;
+}
+
+.breadCrumbWrapper {
+  padding-bottom: 2rem;
+}
+
+.vertAlign {
+  display: flex;
+  align-items: center;
+}

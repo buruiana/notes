@@ -1,0 +1,19 @@
+{
+  "name": "notes",
+  "version": "1.0.0",
+  "author": "",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "client": "yarn workspace @just4dev/main start",
+    "server": "yarn workspace @just4dev/express start",
+    "build": "yarn workspace @just4dev/main build",
+    "start": "concurrently --kill-others \"yarn client\" \"yarn server\""
+  },
+  "dependencies": {
+    "concurrently": "^5.1.0"
+  }
+}
