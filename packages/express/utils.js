@@ -3,6 +3,7 @@ const Post = require('./models/Post')
 const Comment = require('./models/Comment')
 const Keyword = require('./models/Keyword')
 const Like = require('./models/Like')
+const Feature = require('./models/Feature')
 
 const getModel = (model, info) => {
   switch (model) {
@@ -17,6 +18,9 @@ const getModel = (model, info) => {
       break
     case 'like':
       return new Like(info)
+      break
+    case 'feature':
+      return new Feature(info)
       break
     default:
       break
@@ -36,6 +40,9 @@ const getMod = (model) => {
       break
     case 'like':
       return Like
+      break
+    case 'feature':
+      return Feature
       break
     default:
       break

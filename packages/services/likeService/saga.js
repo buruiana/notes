@@ -1,8 +1,4 @@
-import {
-  alertActions,
-  backendServiceUtils,
-  likeActions,
-} from '@just4dev/services'
+import { alertActions, callBackend, likeActions } from '@just4dev/services'
 import { put, takeLatest } from 'redux-saga/effects'
 
 export function* watchHandleLikes(action) {
@@ -10,19 +6,19 @@ export function* watchHandleLikes(action) {
   let response = {}
   try {
     if (operation !== 'read') {
-      response = yield backendServiceUtils.callBackend({
+      response = yield callBackend({
         operation,
         modelType,
         info,
         query,
       })
-      response = yield backendServiceUtils.callBackend({
+      response = yield callBackend({
         operation: 'read',
         modelType: 'like',
         query: {},
       })
     } else {
-      response = yield backendServiceUtils.callBackend({
+      response = yield callBackend({
         operation,
         modelType,
         query,

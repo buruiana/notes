@@ -1,39 +1,37 @@
-import { alertActions, callBackend, keywordActions } from '@just4dev/services'
+import { alertActions, callBackend, featureActions } from '@just4dev/services'
 import { put, takeLatest } from 'redux-saga/effects'
 
-export function* watchHandleKeywords(action) {
+export function* watchHandleFeatures(action) {
   const { operation, modelType, info, query } = action.payload
   let response = {}
   try {
     if (operation !== 'read') {
-      yield callBackend({
+      response = yield callBackend({
         operation,
         modelType,
         info,
         query,
       })
-
       response = yield callBackend({
         operation: 'read',
-        modelType: 'keyword',
-        info: { postId: info.postId },
+        modelType: 'feature',
         query: {},
       })
     } else {
       response = yield callBackend({
         operation,
         modelType,
-        info,
         query,
       })
     }
-    const { collection = [], total = 0 } = response.data
-    yield put(keywordActions.setKeywords(collection))
+
+    const { collection = [] } = response.data
+    yield put(featureActions.setFeatures(collection))
   } catch (error) {
     yield put(alertActions.setAlert(error.message))
   }
 }
 
 export default function* rootSaga() {
-  yield takeLatest('keyword/handleKeywords', watchHandleKeywords)
+  yield takeLatest('feature/handleFeatures', watchHandleFeatures)
 }

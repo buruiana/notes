@@ -9,6 +9,11 @@ export {
   commentServiceReducer,
 } from '@just4dev/services/commentService'
 export {
+  featureActions,
+  featureSelectors,
+  featureServiceReducer,
+} from '@just4dev/services/featureService'
+export {
   keywordActions,
   keywordSelectors,
   keywordServiceReducer,
@@ -19,10 +24,9 @@ export {
   likeServiceReducer,
 } from '@just4dev/services/likeService'
 export {
+  loginActions,
   loginSelectors,
   loginServiceReducer,
-  signin,
-  signout,
 } from '@just4dev/services/loginService'
 export {
   addModal,
@@ -41,3 +45,4 @@ export {
   searchServiceReducer,
   setSearch,
 } from '@just4dev/services/searchService'
+export { callBackend } from './serviceUtils/backendUtils'

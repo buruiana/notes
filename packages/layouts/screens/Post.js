@@ -1,6 +1,7 @@
 import {
   commentActions,
   commentSelectors,
+  featureSelectors,
   likeActions,
   likeSelectors,
   postActions,
@@ -16,7 +17,10 @@ import CommentForm from '../forms/CommentForm'
 
 const Post = ({ id }) => {
   const dispatch = useDispatch()
-
+  const likeFeature =
+    useSelector(featureSelectors.featuresByNameSelector)('like') || {}
+  const commentFeature =
+    useSelector(featureSelectors.featuresByNameSelector)('comment') || {}
   const post = useSelector(postSelectors.postByPostUrlSelector)(id) || {}
   const { title, content, datetime, _id: postId } = post
   const likes = get(
@@ -89,14 +93,20 @@ const Post = ({ id }) => {
       {renderPost()}
       <div className="date-more">
         <span>{new Date(datetime).toDateString()}</span>
-        <span>
-          <Likes count={likes.count} onLikeClick={onLikeClick} />
-        </span>
+        {likeFeature.status && (
+          <span>
+            <Likes count={likes.count} onLikeClick={onLikeClick} />
+          </span>
+        )}
       </div>
-      <div className="commentBox">
-        <CommentForm postId={postId} />
-      </div>
-      <CommentsList comments={comments} />
+      {commentFeature.status && (
+        <>
+          <div className="commentBox">
+            <CommentForm postId={postId} />
+          </div>
+          <CommentsList comments={comments} />
+        </>
+      )}
     </div>
   )
 }

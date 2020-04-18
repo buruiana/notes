@@ -1,8 +1,4 @@
-import {
-  alertActions,
-  backendServiceUtils,
-  commentActions,
-} from '@just4dev/services'
+import { alertActions, callBackend, commentActions } from '@just4dev/services'
 import { put, takeLatest } from 'redux-saga/effects'
 
 export function* watchHandleComments(action) {
@@ -10,21 +6,21 @@ export function* watchHandleComments(action) {
   let response = {}
   try {
     if (operation !== 'read') {
-      yield backendServiceUtils.callBackend({
+      yield callBackend({
         operation,
         modelType,
         info,
         query,
       })
 
-      response = yield backendServiceUtils.callBackend({
+      response = yield callBackend({
         operation: 'read',
         modelType: 'comment',
         info: { postId: info.postId },
         query: {},
       })
     } else {
-      response = yield backendServiceUtils.callBackend({
+      response = yield callBackend({
         operation,
         modelType,
         info,

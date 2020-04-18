@@ -1,4 +1,4 @@
-import { signin } from '@just4dev/services'
+import { loginActions } from '@just4dev/services'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import React from 'react'
@@ -28,7 +28,7 @@ const LoginForm = ({ navigate }) => {
   }
 
   const onSubmit = ({ formData }) => {
-    dispatch(signin(formData))
+    dispatch(loginActions.signin(formData))
   }
 
   return (

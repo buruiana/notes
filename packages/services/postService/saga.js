@@ -1,28 +1,24 @@
-import {
-  alertActions,
-  backendServiceUtils,
-  postActions,
-} from '@just4dev/services'
-import { put, takeLatest } from 'redux-saga/effects'
+import { alertActions, callBackend, postActions } from '@just4dev/services'
+import { put, select, takeLatest } from 'redux-saga/effects'
 
 export function* watchHandlePosts(action) {
   const { operation, modelType, info, query } = action.payload
   let response = {}
   try {
     if (operation !== 'read') {
-      response = yield backendServiceUtils.callBackend({
+      response = yield callBackend({
         operation,
         modelType,
         info,
         query,
       })
-      response = yield backendServiceUtils.callBackend({
+      response = yield callBackend({
         operation: 'read',
         modelType: 'post',
         query: {},
       })
     } else {
-      response = yield backendServiceUtils.callBackend({
+      response = yield callBackend({
         operation,
         modelType,
         query,

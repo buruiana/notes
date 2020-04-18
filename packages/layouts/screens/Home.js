@@ -1,4 +1,8 @@
-import { postActions, postSelectors } from '@just4dev/services'
+import {
+  featureSelectors,
+  postActions,
+  postSelectors,
+} from '@just4dev/services'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
 import React, { useEffect } from 'react'
@@ -12,6 +16,8 @@ const Home = () => {
   const dispatch = useDispatch()
   const posts = useSelector(postSelectors.postSelector) || []
   const total = useSelector(postSelectors.postTotalSelector) || 0
+  const morepostsFeature =
+    useSelector(featureSelectors.featuresByNameSelector)('moreposts') || {}
 
   const showPagination = posts.length < total
 
@@ -49,7 +55,7 @@ const Home = () => {
         <MainHeader />
         <PostList posts={posts} />
         {showPagination && <Pagination onClickMore={onClickMore} />}
-        <MorePosts />
+        {morepostsFeature.status && <MorePosts />}
       </Grid>
     </Container>
   )

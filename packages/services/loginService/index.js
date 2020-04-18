@@ -1,5 +1,5 @@
-import { createSlice } from '@reduxjs/toolkit';
-import * as selectors from './selectors';
+import { createSlice } from '@reduxjs/toolkit'
+import * as selectors from './selectors'
 
 const loginService = createSlice({
   name: 'backend',
@@ -8,21 +8,20 @@ const loginService = createSlice({
   },
   reducers: {
     signin: (state, action) => {
-
       if (
         (action.payload.username === 'admin') &
         (action.payload.password === 'xxx')
       ) {
-        state.authenticated = true;
+        state.authenticated = true
       }
     },
     signout: (state, action) => {
-      state.authenticated = false;
+      state.authenticated = false
     },
   },
-});
+})
 
-const { actions, reducer } = loginService;
-export const { signin, signout } = actions;
-export { reducer as loginServiceReducer };
-export { selectors as loginSelectors };
+const { actions, reducer } = loginService
+export { actions as loginActions }
+export { reducer as loginServiceReducer }
+export { selectors as loginSelectors }

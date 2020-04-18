@@ -10,6 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import MailIcon from '@material-ui/icons/Mail'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
+import { navigate } from '@reach/router'
 import React from 'react'
 
 const drawerWidth = 240
@@ -58,6 +59,17 @@ function Main(props) {
     setMobileOpen(!mobileOpen)
   }
 
+  const onClick = (key) => {
+    switch (key) {
+      case 'Features':
+        navigate('/features')
+        break
+
+      default:
+        break
+    }
+  }
+
   const drawer = (
     <div>
       <div className={classes.toolbar} />
@@ -74,8 +86,8 @@ function Main(props) {
       </List>
       <Divider />
       <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
+        {['Features', 'Posts', 'Spam'].map((text, index) => (
+          <ListItem button key={text} onClick={() => onClick(text)}>
             <ListItemIcon>
               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
             </ListItemIcon>
