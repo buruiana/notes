@@ -3,7 +3,7 @@ import React from 'react'
 
 const Likes = ({ count, onLikeClick }) => (
   <span className="vertAlign">
-    <ThumbUpIcon onClick={onLikeClick} />({count})
+    <ThumbUpIcon onClick={onLikeClick} className="likeStyle" />({count})
   </span>
 )
 

@@ -6,34 +6,35 @@ import {
 import { put, takeLatest } from 'redux-saga/effects'
 
 export function* watchHandleLikes(action) {
-  const { operation, modelType, info } = action.payload
+  const { operation, modelType, info, query } = action.payload
+  let response = {}
   try {
-    const response = yield backendServiceUtils.callBackend({
-      operation,
-      modelType,
-      info,
-    })
+    if (operation !== 'read') {
+      response = yield backendServiceUtils.callBackend({
+        operation,
+        modelType,
+        info,
+        query,
+      })
+      response = yield backendServiceUtils.callBackend({
+        operation: 'read',
+        modelType: 'like',
+        query: {},
+      })
+    } else {
+      response = yield backendServiceUtils.callBackend({
+        operation,
+        modelType,
+        query,
+      })
+    }
+
     const { collection = [] } = response.data
-    yield put(likeActions.setLikes(collection[0]))
+    yield put(likeActions.setLikes(collection))
   } catch (error) {
     yield put(alertActions.setAlert(error.message))
   }
 }
-
-// export function* watchSetLike(action) {
-//   const { _id, postId, count } = action.payload
-//   const actionType = _id ? 'update' : 'create'
-//   try {
-//     const res = yield backendServiceUtils.callBackend(actionType, {
-//       type: 'like',
-//       info: { postId, count, _id },
-//     })
-
-//     yield put(likeActions.getLikes(res.data))
-//   } catch (error) {
-//     yield put(alertActions.setAlert(error.message))
-//   }
-// }
 
 export default function* rootSaga() {
   yield takeLatest('like/handleLikes', watchHandleLikes)

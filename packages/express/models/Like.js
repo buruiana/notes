@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const LikeSchema = new mongoose.Schema({
-  count: { type: Number, required: true, unique: true },
+  count: { type: Number, required: true },
   postId: { type: String, required: true },
 })
 

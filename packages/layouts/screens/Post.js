@@ -6,6 +6,7 @@ import {
   postActions,
   postSelectors,
 } from '@just4dev/services'
+import get from 'lodash/get'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Breadcrumb from '../components/Breadcrumb'
@@ -17,10 +18,17 @@ const Post = ({ id }) => {
   const dispatch = useDispatch()
 
   const post = useSelector(postSelectors.postByPostUrlSelector)(id) || {}
-  const likes = useSelector(likeSelectors.likeSelector) || { postId, count: 0 }
-  const comments = useSelector(commentSelectors.commentSelector) || []
-
   const { title, content, datetime, _id: postId } = post
+  const likes = get(
+    useSelector(likeSelectors.likesByPostIdSelector)(postId),
+    '[0]',
+    {
+      postId,
+      count: 0,
+    },
+  )
+  const comments =
+    useSelector(commentSelectors.commentsByPostIdSelector)(postId) || []
 
   useEffect(() => {
     if (!post._id) {
@@ -28,7 +36,7 @@ const Post = ({ id }) => {
         postActions.handlePosts({
           operation: 'read',
           modelType: 'post',
-          info: { query: { postUrl: id } },
+          query: { postUrl: id },
         }),
       )
     }
@@ -40,14 +48,14 @@ const Post = ({ id }) => {
         likeActions.handleLikes({
           operation: 'read',
           modelType: 'like',
-          info: { postId },
+          query: { postId },
         }),
       )
       dispatch(
         commentActions.handleComments({
           operation: 'read',
           modelType: 'comment',
-          info: { postId },
+          query: { postId },
         }),
       )
     }
@@ -55,10 +63,14 @@ const Post = ({ id }) => {
 
   const onLikeClick = () =>
     dispatch(
-      likeActions.createLike({
-        postId,
-        count: parseInt(likes.count + 1),
-        _id: likes._id,
+      likeActions.handleLikes({
+        operation: likes._id ? 'update' : 'create',
+        modelType: 'like',
+        info: {
+          postId,
+          count: parseInt(likes.count) + 1,
+        },
+        query: { _id: likes._id },
       }),
     )
 

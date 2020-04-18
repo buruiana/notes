@@ -33,9 +33,11 @@ mongoose.connect(
 )
 
 app.post('/api/read', async (req, res) => {
+  if (!req.body.info) req.body.info = {}
   const {
     modelType,
-    info: { limit, skip, sort, query },
+    info: { limit = 0, skip = 0, sort = 'desc' },
+    query,
   } = req.body
 
   const model = getMod(modelType)
@@ -66,26 +68,38 @@ app.post('/api/create', async (req, res) => {
   const { modelType, info } = req.body
   const model = getModel(modelType, info)
 
-  model.save((error) => (error ? res.status(500).send(error) : res.json(model)))
+  model.save((error, result) =>
+    error ? res.status(500).send(error) : res.json(result),
+  )
 })
 
 app.post('/api/update', async (req, res) => {
-  const { modelType, info } = req.body
-  const model = getMod(modelType, info)
+  const { modelType, info, query } = req.body
+  const model = getMod(modelType)
 
-  model.findByIdAndUpdate(info._id, info, (error) => {
-    error ? res.json({ success: false, error }) : res.json({ success: true })
+  model.findByIdAndUpdate(query, info, (error, result) => {
+    error
+      ? res.json({ success: false, error })
+      : res.json({ success: true, result })
   })
 })
 
-app.delete('/api/delete', async (req, res) => {
-  const { modelType, info } = req.body
+app.post('/api/deleteOne', async (req, res) => {
+  const { modelType, query } = req.body
+  const model = getMod(modelType)
 
-  const model = getMod(modelType, info)
-  var myquery = { _id: req.body.info }
-  model.deleteOne(myquery, function (error, obj) {
-    error ? res.status(500).send(error) : res.json('delete success')
-  })
+  model.deleteOne(query, (error, result) =>
+    error ? res.status(500).send(error) : res.json({ success: true }),
+  )
+})
+
+app.post('/api/deleteMany', async (req, res) => {
+  const { modelType, query } = req.body
+  const model = getMod(modelType)
+
+  model.deleteMany(query, (error, result) =>
+    error ? res.status(500).send(error) : res.json({ success: true }),
+  )
 })
 
 const port = process.env.PORT || 3002

@@ -9,9 +9,6 @@ const postService = createSlice({
   },
   reducers: {
     handlePosts: () => undefined,
-    getPosts: () => undefined,
-    setPost: () => undefined,
-    deletePost: () => undefined,
     setPosts: (state, action) => {
       state.posts = action.payload.posts
       state.total = action.payload.total

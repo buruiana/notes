@@ -4,12 +4,10 @@ import * as selectors from './selectors'
 const likeService = createSlice({
   name: 'like',
   initialState: {
-    likes: undefined,
+    likes: [],
   },
   reducers: {
     handleLikes: () => undefined,
-    getLikes: () => undefined,
-    createLike: () => undefined,
     setLikes: (state, action) => {
       state.likes = action.payload
     },

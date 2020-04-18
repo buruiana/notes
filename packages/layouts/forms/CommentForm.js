@@ -3,9 +3,11 @@ import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import React from 'react'
 import { withTheme } from 'react-jsonschema-form'
+import { useDispatch } from 'react-redux'
 import { Theme as MuiTheme } from 'rjsf-material-ui'
 
 const CommentForm = ({ postId }) => {
+  const dispatch = useDispatch()
   const Form = withTheme(MuiTheme)
 
   const schema = {
@@ -46,7 +48,15 @@ const CommentForm = ({ postId }) => {
   }
 
   const onCommentSubmit = ({ formData }) => {
-    dispatch(commentActions.setComment({ type: 'comment', info: formData }))
+    if (!formData.notRobot) {
+      dispatch(
+        commentActions.handleComments({
+          operation: 'create',
+          modelType: 'comment',
+          info: formData,
+        }),
+      )
+    }
   }
 
   return (

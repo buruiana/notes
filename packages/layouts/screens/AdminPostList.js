@@ -1,4 +1,11 @@
-import { postActions, postSelectors } from '@just4dev/services'
+import {
+  commentActions,
+  keywordActions,
+  keywordSelectors,
+  likeActions,
+  postActions,
+  postSelectors,
+} from '@just4dev/services'
 import Link from '@material-ui/core/Link'
 import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
@@ -7,6 +14,8 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { DeleteRounded } from '@material-ui/icons'
+import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
+import EditIcon from '@material-ui/icons/Edit'
 import { navigate } from '@reach/router'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,13 +23,35 @@ import { useDispatch, useSelector } from 'react-redux'
 const PostList = () => {
   const dispatch = useDispatch()
   const posts = useSelector(postSelectors.postSelector) || []
+  const allKeywords = useSelector(keywordSelectors.keywordSelector) || []
 
   useEffect(() => {
     dispatch(
       postActions.handlePosts({
         operation: 'read',
         modelType: 'post',
-        info: {},
+        query: {},
+      }),
+    )
+    dispatch(
+      likeActions.handleLikes({
+        operation: 'read',
+        modelType: 'like',
+        query: {},
+      }),
+    )
+    dispatch(
+      commentActions.handleComments({
+        operation: 'read',
+        modelType: 'comment',
+        query: {},
+      }),
+    )
+    dispatch(
+      keywordActions.handleKeywords({
+        operation: 'read',
+        modelType: 'keyword',
+        query: {},
       }),
     )
     return () => {
@@ -29,6 +60,14 @@ const PostList = () => {
   }, [])
 
   const renderPosts = () => {
+    if (posts.length === 0)
+      return (
+        <TableRow>
+          <TableCell component="th" scope="row">
+            No Posts
+          </TableCell>
+        </TableRow>
+      )
     return posts.map((post) => {
       const {
         _id: postId,
@@ -39,20 +78,79 @@ const PostList = () => {
         category,
       } = post
 
-      const onLinkClick = () => navigate(`/postform/${postUrl}`)
-      const onDelete = () => undefined
+      const onLinkClick = () => navigate(`/post/${postUrl}`)
+      const onEdit = () => navigate(`/postform/${postUrl}`)
+
+      const onDelete = async (postId) => {
+        const post = posts.find((post) => post._id === postId)
+        const { keywords } = post
+        keywords.map((keyword) => {
+          const data = allKeywords.find((e) => e.name === keyword.name)
+
+          if (data.count >= 2) {
+            dispatch(
+              keywordActions.handleKeywords({
+                operation: 'update',
+                modelType: 'keyword',
+                query: { _id: data._id },
+                info: { count: parseInt(data.count) - 1 },
+              }),
+            )
+          } else {
+            dispatch(
+              keywordActions.handleKeywords({
+                operation: 'deleteOne',
+                modelType: 'keyword',
+                query: { _id: data._id },
+              }),
+            )
+          }
+        })
+        await Promise.all([
+          dispatch(
+            likeActions.handleLikes({
+              operation: 'deleteOne',
+              modelType: 'like',
+              query: { postId },
+            }),
+          ),
+
+          dispatch(
+            commentActions.handleComments({
+              operation: 'deleteMany',
+              modelType: 'comment',
+              query: { postId },
+            }),
+          ),
+
+          dispatch(
+            postActions.handlePosts({
+              operation: 'deleteOne',
+              modelType: 'post',
+              query: { _id: postId },
+            }),
+          ),
+        ])
+      }
 
       return (
         <TableRow key={postId}>
           <TableCell component="th" scope="row">
-            <Link onClick={onLinkClick}>{title}</Link>
+            <Link onClick={onLinkClick} className="generic_link">
+              {title}
+            </Link>
           </TableCell>
           <TableCell>{category}</TableCell>
           <TableCell>{shortDescription}</TableCell>
           <TableCell>{new Date(datetime).toDateString()}</TableCell>
           <TableCell align="right">
             <DeleteRounded
-              onClick={onDelete}
+              onClick={() => onDelete(postId)}
+              color="primary"
+              className="generic_link"
+            />
+            <EditIcon
+              onClick={() => onEdit(postId)}
               color="primary"
               className="generic_link"
             />
@@ -61,13 +159,24 @@ const PostList = () => {
       )
     })
   }
+  const addNew = () => navigate('/postform')
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="simple table">
-        <TableBody>{renderPosts()}</TableBody>
-      </Table>
-    </TableContainer>
+    <>
+      <div className="icon_wrapper">
+        <AddCircleOutlineIcon
+          onClick={addNew}
+          color="primary"
+          fontSize="large"
+          className="generic_link"
+        />
+      </div>
+      <TableContainer component={Paper}>
+        <Table aria-label="simple table">
+          <TableBody>{renderPosts()}</TableBody>
+        </Table>
+      </TableContainer>
+    </>
   )
 }
 

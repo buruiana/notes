@@ -33,7 +33,7 @@ const PostForm = ({ id }) => {
         postActions.handlePosts({
           operation: 'read',
           modelType: 'post',
-          info: { query: { postUrl: id } },
+          query: { postUrl: id },
         }),
       )
     }
@@ -44,7 +44,7 @@ const PostForm = ({ id }) => {
       keywordActions.handleKeywords({
         operation: 'read',
         modelType: 'keyword',
-        info: {},
+        query: {},
       }),
     )
     return () => {
@@ -109,30 +109,32 @@ const PostForm = ({ id }) => {
   }
 
   const onSubmit = ({ formData }) => {
-    formData.keywords.map((k) => {
-      const existing = keywords.find((e) => e.name === k.name)
-      if (!existing) {
-        dispatch(
-          keywordActions.handleKeywords({
-            operation: 'create',
-            modelType: 'keyword',
-            info: { name: k.name.toLowerCase().trim(), count: 1 },
-          }),
-        )
-      } else {
-        dispatch(
-          keywordActions.handleKeywords({
-            operation: 'update',
-            modelType: 'keyword',
-            info: {
-              name: existing.name.toLowerCase().trim(),
-              count: existing.count + 1,
-              _id: existing._id,
-            },
-          }),
-        )
-      }
-    })
+    if (!record._id) {
+      formData.keywords.map((k) => {
+        const existing = keywords.find((e) => e.name === k.name)
+
+        if (!existing) {
+          dispatch(
+            keywordActions.handleKeywords({
+              operation: 'create',
+              modelType: 'keyword',
+              info: { name: k.name.toLowerCase().trim(), count: 1 },
+            }),
+          )
+        } else {
+          dispatch(
+            keywordActions.handleKeywords({
+              operation: 'update',
+              modelType: 'keyword',
+              info: {
+                count: parseInt(existing.count) + 1,
+              },
+              query: { _id: existing._id },
+            }),
+          )
+        }
+      })
+    }
 
     dispatch(
       postActions.handlePosts({
@@ -142,6 +144,7 @@ const PostForm = ({ id }) => {
           ...formData,
           postUrl: formData.postUrl.split(' ').join('-').toLowerCase().trim(),
         },
+        query: { _id: formData._id },
       }),
     )
     navigate('/adminpostlist')

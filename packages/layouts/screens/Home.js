@@ -24,6 +24,7 @@ const Home = () => {
           skip: 0,
           limit: 3,
         },
+        query: {},
       }),
     )
   }, [])
@@ -35,8 +36,9 @@ const Home = () => {
         modelType: 'post',
         info: {
           skip: posts.length,
-          limit: 5,
+          limit: 3,
         },
+        query: {},
       }),
     )
   }

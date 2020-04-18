@@ -4,11 +4,6 @@ export {
   alertServiceReducer,
 } from '@just4dev/services/alertService'
 export {
-  backendServiceActions,
-  backendServiceReducer,
-  backendServiceUtils,
-} from '@just4dev/services/backendService'
-export {
   commentActions,
   commentSelectors,
   commentServiceReducer,

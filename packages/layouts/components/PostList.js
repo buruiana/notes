@@ -5,7 +5,6 @@ import React from 'react'
 import Breadcrumb from './Breadcrumb'
 
 const PostList = ({ posts }) => {
-  console.log('########## posts', posts)
   const renderPosts = () => {
     return posts.map((post) => {
       const {
@@ -35,7 +34,9 @@ const PostList = ({ posts }) => {
           <div>
             <div className="left">{new Date(datetime).toDateString()}</div>
             <div className="right">
-              <Link onClick={onLinkClick}>more..</Link>
+              <Link className="generic_link" onClick={onLinkClick}>
+                more..
+              </Link>
             </div>
           </div>
         </div>

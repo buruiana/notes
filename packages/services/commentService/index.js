@@ -8,11 +8,9 @@ const commentService = createSlice({
   },
   reducers: {
     handleComments: () => undefined,
-    getComments: () => undefined,
     setComments: (state, action) => {
       state.comments = action.payload
     },
-    deleteComment: () => undefined,
   },
 })
 
