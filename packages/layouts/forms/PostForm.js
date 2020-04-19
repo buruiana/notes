@@ -8,7 +8,7 @@ import {
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import { navigate } from '@reach/router'
-import { convertToRaw, EditorState } from 'draft-js'
+import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html'
 import React, { useEffect, useRef, useState } from 'react'
 import { Editor } from 'react-draft-wysiwyg'
@@ -20,12 +20,14 @@ import { Theme as MuiTheme } from 'rjsf-material-ui'
 const PostForm = ({ id }) => {
   const dispatch = useDispatch()
   const Form = withTheme(MuiTheme)
-  const [editorState, setEditorState] = useState(EditorState.createEmpty())
-  const [content, setContent] = useState('')
-  const [formData, setFormData] = useState(post)
+
   const authenticated = useSelector(loginSelectors.loginSelector)
   const keywords = useSelector(keywordSelectors.keywordSelector) || []
   const record = useSelector(postSelectors.postByPostUrlSelector)(id) || {}
+  const [formData, setFormData] = useState(record)
+  const [editorState, setEditorState] = useState(EditorState.createEmpty())
+  const { content, priority, category } = record
+
   const editor = useRef(null)
   const focusEditor = () => {
     if (editor.current && editor.current.focus) {
@@ -52,6 +54,20 @@ const PostForm = ({ id }) => {
   }, [record._id])
 
   useEffect(() => {
+    if (content) {
+      const contentState = convertFromRaw(JSON.parse(content))
+      setEditorState(EditorState.createWithContent(contentState))
+
+      setFormData({
+        ...record,
+        priority: parseInt(priority),
+        category: category.toString(),
+        content: stateToHTML(contentState),
+      })
+    }
+  }, [content, priority, category])
+
+  useEffect(() => {
     dispatch(
       keywordActions.handleKeywords({
         operation: 'read',
@@ -63,14 +79,6 @@ const PostForm = ({ id }) => {
       dispatch(keywordActions.resetKeywords)
     }
   }, [])
-
-  const post = record._id
-    ? {
-        ...record,
-        priority: parseInt(record.priority),
-        category: record.category.toString(),
-      }
-    : {}
 
   const onFormChange = ({ formData }) => {
     const contentState = editorState.getCurrentContent()
