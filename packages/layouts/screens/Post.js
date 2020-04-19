@@ -7,6 +7,8 @@ import {
   postActions,
   postSelectors,
 } from '@just4dev/services'
+import { convertFromRaw } from 'draft-js'
+import { stateToHTML } from 'draft-js-export-html'
 import get from 'lodash/get'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -83,7 +85,14 @@ const Post = ({ id }) => {
       <div>
         <h2>{title}</h2>
         <Breadcrumb />
-        <div>{content}</div>
+
+        {content && (
+          <div
+            dangerouslySetInnerHTML={{
+              __html: stateToHTML(convertFromRaw(JSON.parse(content))),
+            }}
+          />
+        )}
       </div>
     )
   }

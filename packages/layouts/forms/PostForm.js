@@ -8,20 +8,32 @@ import {
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import { navigate } from '@reach/router'
-import { EditorState } from 'draft-js'
-import React, { useEffect } from 'react'
+import { convertToRaw, EditorState } from 'draft-js'
+import { stateToHTML } from 'draft-js-export-html'
+import React, { useEffect, useRef, useState } from 'react'
 import { Editor } from 'react-draft-wysiwyg'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { withTheme } from 'react-jsonschema-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { Theme as MuiTheme } from 'rjsf-material-ui'
-import '../react-draft-wysiwyg.css'
 
 const PostForm = ({ id }) => {
   const dispatch = useDispatch()
   const Form = withTheme(MuiTheme)
+  const [editorState, setEditorState] = useState(EditorState.createEmpty())
+  const [content, setContent] = useState('')
+  const [formData, setFormData] = useState(post)
   const authenticated = useSelector(loginSelectors.loginSelector)
   const keywords = useSelector(keywordSelectors.keywordSelector) || []
   const record = useSelector(postSelectors.postByPostUrlSelector)(id) || {}
+  const editor = useRef(null)
+  const focusEditor = () => {
+    if (editor.current && editor.current.focus) {
+      editor.current.focus()
+    }
+  }
+
+  useEffect(() => focusEditor(), [])
 
   useEffect(() => {
     if (authenticated) navigate(`/editor`)
@@ -60,6 +72,30 @@ const PostForm = ({ id }) => {
       }
     : {}
 
+  const onFormChange = ({ formData }) => {
+    const contentState = editorState.getCurrentContent()
+    setFormData({
+      ...formData,
+      content: stateToHTML(contentState),
+    })
+  }
+
+  const DraftWidget = () => {
+    return (
+      <Editor
+        ref={editor}
+        wrapperClassName="demo-wrapper"
+        editorClassName="demo-editor"
+        editorState={editorState}
+        onEditorStateChange={(e) => setEditorState(e)}
+      />
+    )
+  }
+
+  const widgets = {
+    draftWidget: DraftWidget,
+  }
+
   const schema = {
     type: 'object',
     required: ['title', 'content', 'category'],
@@ -88,11 +124,11 @@ const PostForm = ({ id }) => {
   }
 
   const uiSchema = {
-    title: {},
+    'ui:widget': 'draftWidget',
     content: {
       'ui:options': { label: true, rows: 12 },
       'ui:placeholder': '',
-      'ui:widget': 'textarea',
+      'ui:widget': 'draftWidget',
     },
     date: {
       'ui:options': { inputType: 'date', label: true },
@@ -109,6 +145,7 @@ const PostForm = ({ id }) => {
   }
 
   const onSubmit = ({ formData }) => {
+    const contentState = editorState.getCurrentContent()
     if (!record._id) {
       formData.keywords.map((k) => {
         const existing = keywords.find((e) => e.name === k.name)
@@ -143,6 +180,7 @@ const PostForm = ({ id }) => {
         info: {
           ...formData,
           postUrl: formData.postUrl.split(' ').join('-').toLowerCase().trim(),
+          content: JSON.stringify(convertToRaw(contentState)),
         },
         query: { _id: formData._id },
       }),
@@ -150,25 +188,19 @@ const PostForm = ({ id }) => {
     navigate('/adminpostlist')
   }
 
-  const onEditorStateChange = () => undefined
   const showKeywords = () =>
     keywords.map((keyword) => keyword.name.concat(', '))
-  const editorState = EditorState.createEmpty()
 
   return (
     <Container maxWidth="md">
-      <Editor
-        initialEditorState={editorState}
-        wrapperClassName="demo-wrapper"
-        editorClassName="demo-editor"
-        onEditorStateChange={onEditorStateChange}
-      />
       <div>{showKeywords()}</div>
       <Form
         schema={schema}
         onSubmit={onSubmit}
         uiSchema={uiSchema}
-        formData={post}
+        formData={formData}
+        widgets={widgets}
+        onChange={onFormChange}
       >
         <div className="padd_top_bott">
           <Button variant="contained" color="primary" type="submit">

@@ -64,7 +64,12 @@ function Main(props) {
       case 'Features':
         navigate('/features')
         break
-
+      case 'Posts':
+        navigate('/adminpostlist')
+        break
+      case 'Home':
+        navigate('/')
+        break
       default:
         break
     }
@@ -75,8 +80,8 @@ function Main(props) {
       <div className={classes.toolbar} />
       <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
+        {['Home', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          <ListItem button key={text} onClick={() => onClick(text)}>
             <ListItemIcon>
               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
             </ListItemIcon>

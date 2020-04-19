@@ -67,3 +67,21 @@ body {
   cursor: pointer;
   vertical-align: middle;
 }
+
+.icon_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 1rem;
+}
+
+div.DraftEditor-root {
+  background-color: white;
+  height: 800px;
+  overflow-y: auto;
+}
+div.DraftEditor-editorContainer,
+div.public-DraftEditor-content {
+  height: 100%;
+}
