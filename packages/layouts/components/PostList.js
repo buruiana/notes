@@ -25,7 +25,12 @@ const PostList = ({ posts }) => {
           <Breadcrumb />
           <Grid container spacing={1}>
             <Grid item xs={2}>
-              {imageName}
+              <img
+                src={imageName}
+                height="70"
+                width="100"
+                alt={`${postUrl}_img`}
+              />
             </Grid>
             <Grid item xs={10}>
               {longDescription}

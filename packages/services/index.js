@@ -4,6 +4,11 @@ export {
   alertServiceReducer,
 } from '@just4dev/services/alertService'
 export {
+  categoryActions,
+  categorySelectors,
+  categoryServiceReducer,
+} from '@just4dev/services/categoryService'
+export {
   commentActions,
   commentSelectors,
   commentServiceReducer,
@@ -29,11 +34,10 @@ export {
   loginServiceReducer,
 } from '@just4dev/services/loginService'
 export {
-  addModal,
+  modalActions,
   modalHelper,
   modalSelectors,
   modalServiceReducer,
-  removeModal,
 } from '@just4dev/services/modalService'
 export {
   postActions,

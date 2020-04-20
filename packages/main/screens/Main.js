@@ -70,6 +70,8 @@ function Main(props) {
         break
       case 'Home':
         navigate('/')
+      case 'Categories':
+        navigate('/categories')
         break
       default:
         break
@@ -92,7 +94,7 @@ function Main(props) {
       </List>
       <Divider />
       <List>
-        {['Features', 'Posts', 'Spam'].map((text, index) => (
+        {['Features', 'Posts', 'Categories'].map((text, index) => (
           <ListItem button key={text} onClick={() => onClick(text)}>
             <ListItemIcon>
               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}

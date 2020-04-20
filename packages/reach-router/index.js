@@ -15,6 +15,10 @@ const NotFound = React.lazy(() => import('@just4dev/layouts/screens/NotFound'))
 const PostForm = React.lazy(() => import('@just4dev/layouts/forms/PostForm'))
 const Post = React.lazy(() => import('@just4dev/layouts/screens/Post'))
 
+const Categories = React.lazy(() =>
+  import('@just4dev/layouts/screens/Categories'),
+)
+
 const AdminPostList = React.lazy(() =>
   import('@just4dev/layouts/screens/AdminPostList'),
 )
@@ -25,6 +29,7 @@ const routes = (
       <Router>
         <Home path="/" />
         <Features path="features" />
+        <Categories path="categories" />
         <LoginForm path="login" />
         <FeatureForm path="featureform/:id" />
         <FeatureForm path="featureform/" />

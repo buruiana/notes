@@ -1,6 +1,6 @@
 import GenericModal from '@just4dev/layouts/screens/GenericModal'
 import store from '@just4dev/redux-store'
-import { featureActions } from '@just4dev/services'
+import { categoryActions, featureActions } from '@just4dev/services'
 import Container from '@material-ui/core/Container'
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 import React from 'react'
@@ -16,6 +16,13 @@ notesStore.dispatch(
   featureActions.handleFeatures({
     operation: 'read',
     modelType: 'feature',
+    query: {},
+  }),
+)
+notesStore.dispatch(
+  categoryActions.handleCategories({
+    operation: 'read',
+    modelType: 'category',
     query: {},
   }),
 )

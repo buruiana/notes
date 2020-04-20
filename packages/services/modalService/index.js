@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
-import * as selectors from './selectors'
-import * as helper from './helper'
 import dropRight from 'lodash/dropRight'
+import * as helper from './helper'
+import * as selectors from './selectors'
 
 const modalService = createSlice({
   name: 'modal',
@@ -15,14 +15,12 @@ const modalService = createSlice({
     removeModal: (state, action) => {
       state.modals = dropRight(state.modals, 1)
     },
-  }
+  },
 })
 
 const { actions, reducer } = modalService
-export const {
-  addModal,
-  removeModal,
-} = actions
+
+export { actions as modalActions }
 export { reducer as modalServiceReducer }
 export { selectors as modalSelectors }
 export { helper as modalHelper }

@@ -1,5 +1,6 @@
 import {
   alertServiceReducer,
+  categoryServiceReducer,
   commentServiceReducer,
   featureServiceReducer,
   keywordServiceReducer,
@@ -13,6 +14,7 @@ import { combineReducers } from 'redux'
 
 const rootReducer = combineReducers({
   alertServiceReducer,
+  categoryServiceReducer,
   commentServiceReducer,
   featureServiceReducer,
   loginServiceReducer,
