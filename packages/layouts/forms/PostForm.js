@@ -1,4 +1,5 @@
 import {
+  categorySelectors,
   keywordActions,
   keywordSelectors,
   loginSelectors,
@@ -10,6 +11,7 @@ import Container from '@material-ui/core/Container'
 import { navigate } from '@reach/router'
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html'
+import get from 'lodash/get'
 import React, { useEffect, useRef, useState } from 'react'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
@@ -27,6 +29,10 @@ const PostForm = ({ id }) => {
   const [formData, setFormData] = useState(record)
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const { content, priority, category } = record
+
+  const categories = useSelector(categorySelectors.categorySelector) || []
+  const { data = [] } = categories
+  const catList = data.map((cat) => cat.title)
 
   const editor = useRef(null)
   const focusEditor = () => {
@@ -80,8 +86,21 @@ const PostForm = ({ id }) => {
     }
   }, [])
 
+  const getSubcategory = (cat) => {
+    if (cat) {
+      const children = get(
+        data.filter((e) => e.title === cat),
+        '[0].children',
+        [],
+      )
+
+      return children.map((e) => e.title)
+    }
+  }
+
   const onFormChange = ({ formData }) => {
     const contentState = editorState.getCurrentContent()
+
     setFormData({
       ...formData,
       content: stateToHTML(contentState),
@@ -119,6 +138,14 @@ const PostForm = ({ id }) => {
       shortDescription: { type: 'string' },
       longDescription: { type: 'string' },
       category: { type: 'string' },
+      category: {
+        type: 'string',
+        enum: catList,
+      },
+      subcategory: {
+        type: 'string',
+        enum: [],
+      },
       keywords: {
         type: 'array',
         items: {
@@ -150,6 +177,13 @@ const PostForm = ({ id }) => {
     },
     category: {},
     keywords: { items: { name: {} } },
+  }
+
+  if (formData.category) {
+    schema.properties.subcategory = {
+      ...schema.properties.subcategory,
+      enum: getSubcategory(formData.category),
+    }
   }
 
   const onSubmit = ({ formData }) => {

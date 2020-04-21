@@ -1,17 +1,24 @@
 import routes from '@just4dev/reach-router'
+import { categorySelectors } from '@just4dev/services'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import Divider from '@material-ui/core/Divider'
 import Drawer from '@material-ui/core/Drawer'
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import Hidden from '@material-ui/core/Hidden'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import MailIcon from '@material-ui/icons/Mail'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
 import { navigate } from '@reach/router'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 const drawerWidth = 240
 
@@ -54,48 +61,101 @@ function Main(props) {
   const { container } = props
   const classes = useStyles()
   const theme = useTheme()
-  const [mobileOpen, setMobileOpen] = React.useState(false)
+  const { categories = [] } = useSelector(
+    categorySelectors.categorySelector,
+  ) || { categories: [] }
+  const cats = categories.map((e) => e.categoryTitle)
+
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [expanded, setExpanded] = useState({})
+
+  useEffect(() => {
+    if (categories._id) {
+      setExpanded(
+        cats.reduce((acc, val) => {
+          acc[val] = false
+          return acc
+        }, {}),
+      )
+    }
+  }, [categories._id])
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false)
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
   }
 
-  const onClick = (key) => {
-    switch (key) {
-      case 'Features':
-        navigate('/features')
-        break
-      case 'Posts':
-        navigate('/adminpostlist')
-        break
-      case 'Home':
-        navigate('/')
-      case 'Categories':
-        navigate('/categories')
-        break
-      default:
-        break
+  const onClick = ({ text, cat, subCat }) => {
+    if (text) {
+      navigate(`/${text.toLowerCase()}`)
+    } else if (subCat) {
+      navigate(`/${cat.toLowerCase()}/${subCat.toLowerCase()}`)
+    } else if (cat) {
+      navigate(`/${cat.toLowerCase()}`)
+    } else {
+      navigate('/')
     }
+    return null
+  }
+
+  const renderSubCategories = (cat) => {
+    const selectedCat = categories.find(
+      (category) => category.categoryTitle === cat,
+    )
+    const subCats = selectedCat.subcategories.map((e) => e.subcategoryTitle)
+
+    return subCats.map((subCat, index) => (
+      <List key={subCat}>
+        <ListItem button onClick={() => onClick({ cat, subCat })}>
+          <ListItemIcon>
+            {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+          </ListItemIcon>
+          <ListItemText primary={subCat} />
+        </ListItem>
+      </List>
+    ))
+  }
+
+  const renerCategories = () => {
+    return cats.map((cat, index) => (
+      <ExpansionPanel
+        expanded={expanded[cat] === true}
+        onChange={handleChange({
+          ...expanded,
+          [cat]: !expanded[cat],
+        })}
+        key={cat}
+      >
+        <ExpansionPanelSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+        >
+          <Typography
+            className={classes.heading}
+            onClick={() => onClick({ cat })}
+          >
+            {cat}
+          </Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          {renderSubCategories(cat)}
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+    ))
   }
 
   const drawer = (
     <div>
       <div className={classes.toolbar} />
-      <Divider />
-      <List>
-        {['Home', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text} onClick={() => onClick(text)}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
+      <List>{renerCategories()}</List>
       <Divider />
       <List>
         {['Features', 'Posts', 'Categories'].map((text, index) => (
-          <ListItem button key={text} onClick={() => onClick(text)}>
+          <ListItem button key={text} onClick={() => onClick({ text })}>
             <ListItemIcon>
               {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
             </ListItemIcon>

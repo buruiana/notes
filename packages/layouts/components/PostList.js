@@ -15,6 +15,7 @@ const PostList = ({ posts }) => {
         imageName,
         datetime,
         category,
+        subcategory,
       } = post
 
       const onLinkClick = () => navigate(`/post/${postUrl}`)
@@ -22,7 +23,7 @@ const PostList = ({ posts }) => {
       return (
         <div key={postId}>
           <h2>{title}</h2>
-          <Breadcrumb />
+          <Breadcrumb category={category} subcategory={subcategory} />
           <Grid container spacing={1}>
             <Grid item xs={2}>
               <img

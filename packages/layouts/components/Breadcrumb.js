@@ -1,33 +1,29 @@
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import Link from '@material-ui/core/Link'
+import { navigate } from '@reach/router'
 import React from 'react'
 
-function handleClick(event) {
+const handleClick = (event) => {
   event.preventDefault()
-  console.info('You clicked a breadcrumb.')
+  navigate(`${event.target.href}`)
 }
 
-export default function Breadcrumb() {
+export default function Breadcrumb({ category, subcategory }) {
   return (
     <Breadcrumbs aria-label="breadcrumb" className="breadCrumbWrapper">
-      <Link color="inherit" href="/" onClick={handleClick}>
-        Material-UI
+      <Link color="inherit" href={`/${category}`} onClick={handleClick}>
+        {category}
       </Link>
-      <Link
-        color="inherit"
-        href="/getting-started/installation/"
-        onClick={handleClick}
-      >
-        Core
-      </Link>
-      <Link
-        color="textPrimary"
-        href="/components/breadcrumbs/"
-        onClick={handleClick}
-        aria-current="page"
-      >
-        Breadcrumb
-      </Link>
+      {subcategory && (
+        <Link
+          color="textPrimary"
+          href={`/${category}/${subcategory}`}
+          onClick={handleClick}
+          aria-current="page"
+        >
+          {subcategory}
+        </Link>
+      )}
     </Breadcrumbs>
   )
 }

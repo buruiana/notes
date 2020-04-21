@@ -20,7 +20,7 @@ import { navigate } from '@reach/router'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const PostList = () => {
+const Posts = () => {
   const dispatch = useDispatch()
   const posts = useSelector(postSelectors.postSelector) || []
   const allKeywords = useSelector(keywordSelectors.keywordSelector) || []
@@ -180,4 +180,4 @@ const PostList = () => {
   )
 }
 
-export default PostList
+export default Posts

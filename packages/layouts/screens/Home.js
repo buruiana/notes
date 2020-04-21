@@ -12,7 +12,7 @@ import MorePosts from '../components/MorePosts'
 import Pagination from '../components/Pagination'
 import PostList from '../components/PostList'
 
-const Home = () => {
+const Home = ({ cat, subcat }) => {
   const dispatch = useDispatch()
   const posts = useSelector(postSelectors.postSelector) || []
   const total = useSelector(postSelectors.postTotalSelector) || 0
@@ -53,7 +53,7 @@ const Home = () => {
     <Container maxWidth="xl">
       <Grid item xs={12}>
         <MainHeader />
-        <PostList posts={posts} />
+        <PostList posts={posts} cat={cat} subcat={subcat} />
         {showPagination && <Pagination onClickMore={onClickMore} />}
         {morepostsFeature.status && <MorePosts />}
       </Grid>
