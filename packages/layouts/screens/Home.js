@@ -14,8 +14,22 @@ import PostList from '../components/PostList'
 
 const Home = ({ cat, subcat }) => {
   const dispatch = useDispatch()
-  const posts = useSelector(postSelectors.postSelector) || []
-  const total = useSelector(postSelectors.postTotalSelector) || 0
+  let posts = []
+  let total = 0
+
+  if (subcat) {
+    posts = useSelector(postSelectors.postByCatSubCat)(cat, subcat) || []
+    total = useSelector(postSelectors.postTotalSelector) || 0
+  } else if (cat) {
+    posts = useSelector(postSelectors.postByCat)(cat) || []
+    total = useSelector(postSelectors.postTotalSelector) || 0
+  } else {
+    posts = useSelector(postSelectors.postSelector) || []
+    total = useSelector(postSelectors.postTotalSelector) || 0
+  }
+
+  console.log('########## posts', posts)
+
   const morepostsFeature =
     useSelector(featureSelectors.featuresByNameSelector)('moreposts') || {}
 
@@ -28,7 +42,7 @@ const Home = ({ cat, subcat }) => {
         modelType: 'post',
         info: {
           skip: 0,
-          limit: 3,
+          limit: 10,
         },
         query: {},
       }),
@@ -42,7 +56,7 @@ const Home = ({ cat, subcat }) => {
         modelType: 'post',
         info: {
           skip: posts.length,
-          limit: 3,
+          limit: 10,
         },
         query: {},
       }),

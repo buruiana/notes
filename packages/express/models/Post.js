@@ -9,9 +9,9 @@ const PostSchema = new mongoose.Schema({
   keywords: { type: Array, required: false },
   imageName: { type: String, required: false },
   datetime: { type: Date, required: false },
-  category: { type: Array, required: false },
-  priority: { type: String, required: false }
+  category: { type: String, required: false },
+  subcategory: { type: String, required: false },
+  priority: { type: String, required: false },
 })
 
 module.exports = mongoose.model('Post', PostSchema)
-

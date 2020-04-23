@@ -1,5 +1,5 @@
 import { alertActions, callBackend, postActions } from '@just4dev/services'
-import { put, select, takeLatest } from 'redux-saga/effects'
+import { put, takeLatest } from 'redux-saga/effects'
 
 export function* watchHandlePosts(action) {
   const { operation, modelType, info, query } = action.payload
@@ -26,17 +26,19 @@ export function* watchHandlePosts(action) {
     }
 
     const { collection = [], total = 0 } = response.data
-    if (info && info.limit) {
-      const posts = (yield select()).postServiceReducer.posts || []
-      yield put(
-        postActions.setPosts({
-          posts: [...posts, ...collection],
-          total,
-        }),
-      )
-    } else {
-      yield put(postActions.setPosts({ posts: collection, total }))
-    }
+
+    yield put(postActions.setPosts({ posts: collection, total }))
+    // if (info && info.limit) {
+    //   const posts = (yield select()).postServiceReducer.posts || []
+    //   yield put(
+    //     postActions.setPosts({
+    //       posts: [...posts, ...collection],
+    //       total,
+    //     }),
+    //   )
+    // } else {
+    //   yield put(postActions.setPosts({ posts: collection, total }))
+    // }
   } catch (error) {
     yield put(alertActions.setAlert(error.message))
   }

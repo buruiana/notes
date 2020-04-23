@@ -21,6 +21,7 @@ const Categories = () => {
           type: 'object',
           required: ['categoryTitle'],
           properties: {
+            categoryId: { type: 'string' },
             categoryTitle: { type: 'string' },
             categoryActive: { type: 'boolean' },
             categoryMetaKeywords: { type: 'string' },
@@ -39,6 +40,7 @@ const Categories = () => {
                 type: 'object',
                 required: ['subcategoryTitle'],
                 properties: {
+                  subcategoryId: { type: 'string' },
                   subcategoryTitle: { type: 'string' },
                   subcategoryActive: { type: 'boolean' },
                   subcategoryMetaKeywords: { type: 'string' },

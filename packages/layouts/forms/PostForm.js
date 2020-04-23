@@ -30,13 +30,12 @@ const PostForm = ({ id }) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const { content, priority, category } = record
 
-  const categories = useSelector(categorySelectors.categorySelector) || []
-  const { data = [] } = categories
-  const catList = data.map((cat) => cat.title)
+  const { categories = [] } = useSelector(categorySelectors.categorySelector)
+  const catList = categories.map((cat) => cat.categoryTitle) || []
 
   const editor = useRef(null)
   const focusEditor = () => {
-    if (editor.current && editor.current.focus) {
+    if (get(editor, 'current.focus', false)) {
       editor.current.focus()
     }
   }
@@ -88,13 +87,13 @@ const PostForm = ({ id }) => {
 
   const getSubcategory = (cat) => {
     if (cat) {
-      const children = get(
-        data.filter((e) => e.title === cat),
-        '[0].children',
-        [],
+      console.log('########## cat', cat)
+      const selectedCat = categories.find(
+        (category) =>
+          category.categoryTitle.toLowerCase() === cat.toLowerCase(),
       )
-
-      return children.map((e) => e.title)
+      console.log('########## selectedCat', selectedCat)
+      return selectedCat.subcategories.map((e) => e.subcategoryTitle)
     }
   }
 
@@ -221,13 +220,18 @@ const PostForm = ({ id }) => {
         modelType: 'post',
         info: {
           ...formData,
-          postUrl: formData.postUrl.split(' ').join('-').toLowerCase().trim(),
+          postUrl: formData.postUrl
+            .replace(/[^\w\s]/gi, '')
+            .split(' ')
+            .join('-')
+            .toLowerCase()
+            .trim(),
           content: JSON.stringify(convertToRaw(contentState)),
         },
         query: { _id: formData._id },
       }),
     )
-    navigate('/adminpostlist')
+    navigate('/posts')
   }
 
   const showKeywords = () =>

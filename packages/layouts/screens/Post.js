@@ -7,10 +7,11 @@ import {
   postActions,
   postSelectors,
 } from '@just4dev/services'
+import Link from '@material-ui/core/Link'
 import { convertFromRaw } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html'
 import get from 'lodash/get'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Breadcrumb from '../components/Breadcrumb'
 import CommentsList from '../components/CommentsList'
@@ -19,6 +20,7 @@ import CommentForm from '../forms/CommentForm'
 
 const Post = ({ id }) => {
   const dispatch = useDispatch()
+  const [comment, setComment] = useState(false)
   const likeFeature =
     useSelector(featureSelectors.featuresByNameSelector)('like') || {}
   const commentFeature =
@@ -97,6 +99,19 @@ const Post = ({ id }) => {
     )
   }
 
+  const showCommentsBlock = () => {
+    if (comment) {
+      return (
+        <>
+          <div className="commentBox">
+            <CommentForm postId={postId} />
+          </div>
+          <CommentsList comments={comments} />
+        </>
+      )
+    }
+  }
+
   return (
     <div>
       {renderPost()}
@@ -109,13 +124,16 @@ const Post = ({ id }) => {
         )}
       </div>
       {commentFeature.status && (
-        <>
-          <div className="commentBox">
-            <CommentForm postId={postId} />
-          </div>
-          <CommentsList comments={comments} />
-        </>
+        <Link
+          color="textPrimary"
+          href="#"
+          onClick={() => setComment(!comment)}
+          aria-current="page"
+        >
+          Leave Comment
+        </Link>
       )}
+      {showCommentsBlock()}
     </div>
   )
 }

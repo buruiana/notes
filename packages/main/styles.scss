@@ -39,15 +39,15 @@ body {
   padding: 1rem;
 }
 
-.commentBox {
-  border: 1px solid #4d5d53;
-  border-radius: 1rem;
-}
+// .commentBox {
+//   border: 1px solid #4d5d53;
+//   border-radius: 1rem;
+// }
 
-.commentBlock {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
+// .commentBlock {
+//   padding-top: 1rem;
+//   padding-bottom: 1rem;
+// }
 
 .commentWrapper {
   padding-bottom: 3rem;
@@ -95,16 +95,4 @@ div.public-DraftEditor-content {
 .row {
   display: flex;
   height: 100%;
-}
-
-.MuiExpansionPanelDetails-root {
-  display: block !important;
-}
-
-.MuiList-root .MuiList-padding {
-  padding: 0 !important;
-}
-
-.MuiExpansionPanel-root.Mui-expanded {
-  margin: 0 !important;
 }
