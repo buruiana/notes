@@ -10,6 +10,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import Hidden from '@material-ui/core/Hidden'
 import IconButton from '@material-ui/core/IconButton'
 import InputBase from '@material-ui/core/InputBase'
+import Link from '@material-ui/core/Link'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -24,7 +25,6 @@ import InboxIcon from '@material-ui/icons/MoveToInbox'
 import SearchIcon from '@material-ui/icons/Search'
 import { navigate } from '@reach/router'
 import React, { useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import { useSelector } from 'react-redux'
 
 const drawerWidth = 240
@@ -145,11 +145,11 @@ function Main(props) {
 
   const onClick = ({ text, cat, subCat }) => {
     if (text) {
-      navigate(`/${text.toLowerCase()}`)
+      navigate(`/${text}`)
     } else if (subCat) {
-      navigate(`/${cat.toLowerCase()}/${subCat.toLowerCase()}`)
+      navigate(`/${cat}/${subCat}`)
     } else if (cat) {
-      navigate(`/${cat.toLowerCase()}`)
+      navigate(`/${cat}`)
     } else {
       navigate('/')
     }
@@ -223,11 +223,6 @@ function Main(props) {
 
   return (
     <div className={classes.root}>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>My Title</title>
-        <link rel="canonical" href="http://mysite.com/example" />
-      </Helmet>
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
@@ -240,9 +235,11 @@ function Main(props) {
           >
             <MenuIcon />
           </IconButton>
+
           <Typography className={classes.title} variant="h6" noWrap>
-            Material-UI
+            <Link href="/">bpGen</Link>
           </Typography>
+
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />

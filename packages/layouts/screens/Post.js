@@ -12,6 +12,7 @@ import { convertFromRaw } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html'
 import get from 'lodash/get'
 import React, { useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import { useDispatch, useSelector } from 'react-redux'
 import Breadcrumb from '../components/Breadcrumb'
 import CommentsList from '../components/CommentsList'
@@ -26,7 +27,7 @@ const Post = ({ id }) => {
   const commentFeature =
     useSelector(featureSelectors.featuresByNameSelector)('comment') || {}
   const post = useSelector(postSelectors.postByPostUrlSelector)(id) || {}
-  const { title, content, datetime, _id: postId } = post
+  const { title, content, datetime, _id: postId, category, subcategory } = post
   const likes = get(
     useSelector(likeSelectors.likesByPostIdSelector)(postId),
     '[0]',
@@ -86,7 +87,7 @@ const Post = ({ id }) => {
     return (
       <div>
         <h2>{title}</h2>
-        <Breadcrumb />
+        <Breadcrumb category={category} subcategory={subcategory} />
 
         {content && (
           <div
@@ -114,6 +115,11 @@ const Post = ({ id }) => {
 
   return (
     <div>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>My Title</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       {renderPost()}
       <div className="date-more">
         <span>{new Date(datetime).toDateString()}</span>

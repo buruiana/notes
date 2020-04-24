@@ -76,9 +76,11 @@ const Posts = () => {
         shortDescription,
         datetime,
         category,
+        subcategory,
       } = post
 
-      const onLinkClick = () => navigate(`/post/${postUrl}`)
+      const onTitleClick = () =>
+        navigate(`/${category}/${subcategory}/${postUrl}`)
       const onEdit = () => navigate(`/postform/${postUrl}`)
 
       const onDelete = async (postId) => {
@@ -136,7 +138,7 @@ const Posts = () => {
       return (
         <TableRow key={postId}>
           <TableCell component="th" scope="row">
-            <Link onClick={onLinkClick} className="generic_link">
+            <Link onClick={onTitleClick} className="generic_link">
               {title}
             </Link>
           </TableCell>

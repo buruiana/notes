@@ -33,10 +33,11 @@ const routes = (
         <FeatureForm path="featureform/" />
         <PostForm path="postform/:id" />
         <PostForm path="postform/" />
-        <Posts path="posts" />
-        <Post path="post/:id" />
+        <Posts path="Posts" />
+        {/* <Post path="post/:id" /> */}
         <Home path="/:cat" />
         <Home path="/:cat/:subcat" />
+        <Post path="/:cat/:subcat/:id" />
         <NotFound default />
       </Router>
     </Suspense>

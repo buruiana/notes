@@ -18,11 +18,16 @@ const PostList = ({ posts }) => {
         subcategory,
       } = post
 
-      const onLinkClick = () => navigate(`/post/${postUrl}`)
+      const onTitleClick = () =>
+        navigate(`/${category}/${subcategory}/${postUrl}`)
 
       return (
         <div key={postId}>
-          <h2>{title}</h2>
+          <h2>
+            <Link className="generic_link" onClick={onTitleClick}>
+              {title}
+            </Link>
+          </h2>
           <Breadcrumb category={category} subcategory={subcategory} />
           <Grid container spacing={1}>
             <Grid item xs={2}>
@@ -40,7 +45,7 @@ const PostList = ({ posts }) => {
           <div>
             <div className="left">{new Date(datetime).toDateString()}</div>
             <div className="right">
-              <Link className="generic_link" onClick={onLinkClick}>
+              <Link className="generic_link" onClick={onTitleClick}>
                 more..
               </Link>
             </div>

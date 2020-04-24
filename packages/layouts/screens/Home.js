@@ -6,6 +6,7 @@ import {
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
 import React, { useEffect } from 'react'
+import { Helmet } from 'react-helmet'
 import { useDispatch, useSelector } from 'react-redux'
 import MainHeader from '../components/MainHeader'
 import MorePosts from '../components/MorePosts'
@@ -27,8 +28,6 @@ const Home = ({ cat, subcat }) => {
     posts = useSelector(postSelectors.postSelector) || []
     total = useSelector(postSelectors.postTotalSelector) || 0
   }
-
-  console.log('########## posts', posts)
 
   const morepostsFeature =
     useSelector(featureSelectors.featuresByNameSelector)('moreposts') || {}
@@ -65,6 +64,11 @@ const Home = ({ cat, subcat }) => {
 
   return (
     <Container maxWidth="xl">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>My Title</title>
+        <link rel="canonical" href="http://mysite.com/example" />
+      </Helmet>
       <Grid item xs={12}>
         <MainHeader />
         <PostList posts={posts} cat={cat} subcat={subcat} />
