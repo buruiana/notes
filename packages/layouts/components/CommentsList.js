@@ -6,7 +6,6 @@ import { DeleteRounded } from '@material-ui/icons'
 import React from 'react'
 
 const CommentsList = ({ comments, onDeleteComment }) => {
-  console.log('########## onDeleteComment', onDeleteComment)
   const renderComments = () => {
     return comments.map((el) => {
       const { _id, name, comment } = el

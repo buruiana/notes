@@ -42,7 +42,7 @@ const FeatureForm = ({ id }) => {
         query: { _id: formData._id },
       }),
     )
-    navigate('/features')
+    navigate('/Features')
   }
 
   return (
