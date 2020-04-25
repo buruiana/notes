@@ -286,7 +286,7 @@ function Main(props) {
           </Drawer>
         </Hidden>
       </nav>
-      <main className={classes.content}>{routes}</main>
+      <main className={classes.content}>{routes()}</main>
     </div>
   )
 }
