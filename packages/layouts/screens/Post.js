@@ -100,6 +100,15 @@ const Post = ({ id }) => {
     )
   }
 
+  const onDeleteComment = (_id) =>
+    dispatch(
+      commentActions.handleComments({
+        operation: 'deleteOne',
+        modelType: 'comment',
+        info: { query: { _id } },
+      }),
+    )
+
   const showCommentsBlock = () => {
     if (comment) {
       return (
@@ -107,7 +116,7 @@ const Post = ({ id }) => {
           <div className="commentBox">
             <CommentForm postId={postId} />
           </div>
-          <CommentsList comments={comments} />
+          <CommentsList comments={comments} onDeleteComment={onDeleteComment} />
         </>
       )
     }

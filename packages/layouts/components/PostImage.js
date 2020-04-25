@@ -1,12 +1,5 @@
-import React from 'react';
+import React from 'react'
 
-const PostImage = () => {
-
-  return (
-    <div>
-      Post Image
-    </div>
-  );
-}
+const PostImage = () => <div>Post Image</div>
 
 export default PostImage

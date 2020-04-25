@@ -1,12 +1,5 @@
-import React from 'react';
+import React from 'react'
 
-const MainHeader = () => {
-
-  return (
-    <div>
-      Main Header
-    </div>
-  );
-}
+const MainHeader = () => <div>Main Header</div>
 
 export default MainHeader
