@@ -1,28 +1,26 @@
-import Loader from '@just4dev/layouts/components/Loader'
+import Loader from '@just4dev/front/components/Loader'
 import { featureSelectors } from '@just4dev/services'
 import { createHistory, Router } from '@reach/router'
 import React, { Suspense, useEffect } from 'react'
 import ReactGA from 'react-ga'
 import { useSelector } from 'react-redux'
 
-const Home = React.lazy(() => import('@just4dev/layouts/screens/Home'))
+const Home = React.lazy(() => import('@just4dev/front/screens/Home'))
 
-const Features = React.lazy(() => import('@just4dev/layouts/screens/Features'))
+const Features = React.lazy(() => import('@just4dev/front/screens/Features'))
 const FeatureForm = React.lazy(() =>
-  import('@just4dev/layouts/forms/FeatureForm'),
+  import('@just4dev/front/forms/FeatureForm'),
 )
 
-const LoginForm = React.lazy(() => import('@just4dev/layouts/forms/LoginForm'))
-const NotFound = React.lazy(() => import('@just4dev/layouts/screens/NotFound'))
+const LoginForm = React.lazy(() => import('@just4dev/front/forms/LoginForm'))
+const NotFound = React.lazy(() => import('@just4dev/front/screens/NotFound'))
 
-const PostForm = React.lazy(() => import('@just4dev/layouts/forms/PostForm'))
-const Post = React.lazy(() => import('@just4dev/layouts/screens/Post'))
+const PostForm = React.lazy(() => import('@just4dev/front/forms/PostForm'))
+const Post = React.lazy(() => import('@just4dev/front/screens/Post'))
 
-const Categories = React.lazy(() =>
-  import('@just4dev/layouts/forms/Categories'),
-)
+const Categories = React.lazy(() => import('@just4dev/front/forms/Categories'))
 
-const Posts = React.lazy(() => import('@just4dev/layouts/screens/Posts'))
+const Posts = React.lazy(() => import('@just4dev/front/screens/Posts'))
 
 let history = createHistory(window)
 history.listen((location) => {
@@ -58,7 +56,6 @@ const routes = () => {
           <PostForm path="postform/:id" />
           <PostForm path="postform/" />
           <Posts path="Posts" />
-          {/* <Post path="post/:id" /> */}
           <Home path="/:cat" />
           <Home path="/:cat/:subcat" />
           <Post path="/:cat/:subcat/:id" />

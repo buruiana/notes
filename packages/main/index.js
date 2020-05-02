@@ -1,4 +1,5 @@
-import GenericModal from '@just4dev/layouts/screens/GenericModal'
+import Footer from '@just4dev/front/components/Footer'
+import GenericModal from '@just4dev/front/screens/GenericModal'
 import store from '@just4dev/redux-store'
 import { categoryActions, featureActions } from '@just4dev/services'
 import Container from '@material-ui/core/Container'
@@ -6,9 +7,8 @@ import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles'
 import React from 'react'
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import Footer from './components/Footer'
+import './assets/css/material-dashboard-react.css'
 import Main from './screens/Main'
-import './styles.scss'
 
 const theme = createMuiTheme({})
 const notesStore = store()
