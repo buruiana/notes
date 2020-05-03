@@ -48,14 +48,14 @@ const routes = () => {
       <Suspense fallback={<Loader />}>
         <Router>
           <Home path="/" />
-          <Features path="Features" />
-          <Categories path="categories" />
+          <Features path="aFeatures" />
+          <Categories path="aCategories" />
           <LoginForm path="login" />
           <FeatureForm path="featureform/:id" />
           <FeatureForm path="featureform/" />
           <PostForm path="postform/:id" />
           <PostForm path="postform/" />
-          <Posts path="Posts" />
+          <Posts path="aPosts" />
           <Home path="/:cat" />
           <Home path="/:cat/:subcat" />
           <Post path="/:cat/:subcat/:id" />

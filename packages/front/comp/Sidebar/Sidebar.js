@@ -90,7 +90,7 @@ const Sidebar = (props) => {
 
   const renderAdmin = (
     <List className={classes.list}>
-      {['Features', 'Posts', 'Categories'].map((text, index) => {
+      {['aFeatures', 'aPosts', 'aCategories'].map((text, index) => {
         const listItemClasses = classNames({
           [' ' + classes[color]]: activeRoute(),
         })

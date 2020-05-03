@@ -19,9 +19,7 @@ const Main = ({ ...rest }) => {
   const classes = useStyles()
   const [mobileOpen, setMobileOpen] = React.useState(false)
 
-  const { categories = [] } = useSelector(
-    categorySelectors.categorySelector,
-  ) || { categories: [] }
+  const { categories = [] } = useSelector(categorySelectors.categorySelector)
 
   const onClick = ({ text, cat, subCat }) => {
     if (text) {

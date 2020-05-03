@@ -1,4 +1,5 @@
 import {
+  categorySelectors,
   commentActions,
   keywordActions,
   keywordSelectors,
@@ -17,12 +18,14 @@ import { DeleteRounded } from '@material-ui/icons'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import EditIcon from '@material-ui/icons/Edit'
 import { navigate } from '@reach/router'
+import isEmpty from 'lodash/isEmpty'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Posts = () => {
   const dispatch = useDispatch()
   const posts = useSelector(postSelectors.postSelector) || []
+  const { categories = [] } = useSelector(categorySelectors.categorySelector)
   const allKeywords = useSelector(keywordSelectors.keywordSelector) || []
 
   useEffect(() => {
@@ -78,6 +81,11 @@ const Posts = () => {
         category,
         subcategory,
       } = post
+
+      const getCategoryName = (cat) => {
+        if (isEmpty(categories)) return { subcategories: [] }
+        return categories.find((e) => e.categoryId === cat).categoryTitle
+      }
 
       const onTitleClick = () =>
         navigate(`/${category}/${subcategory}/${postUrl}`)
@@ -142,7 +150,7 @@ const Posts = () => {
               {title}
             </Link>
           </TableCell>
-          <TableCell>{category}</TableCell>
+          <TableCell>{getCategoryName(category)}</TableCell>
           <TableCell>{shortDescription}</TableCell>
           <TableCell>{new Date(datetime).toDateString()}</TableCell>
           <TableCell align="right">

@@ -31,13 +31,8 @@ const PostForm = ({ id }) => {
   const { content, priority, category } = record
 
   const { categories = [] } = useSelector(categorySelectors.categorySelector)
-  const catList =
-    categories.map((cat) => {
-      return {
-        title: cat.categoryTitle,
-        id: cat.categoryId,
-      }
-    }) || []
+  const catList = categories.map((cat) => cat.categoryId)
+  const catListNames = categories.map((cat) => cat.categoryTitle)
 
   const editor = useRef(null)
   const focusEditor = () => {
@@ -92,16 +87,19 @@ const PostForm = ({ id }) => {
   }, [])
 
   const getSubcategory = (catId) => {
-    if (cat) {
+    if (catId) {
       const selectedCat = categories.find(
         (category) => category.categoryId.toLowerCase() === catId.toLowerCase(),
+      ) || { subcategories: [] }
+
+      const enumIds = selectedCat.subcategories.map((e) => e.subcategoryId)
+      const enumTitles = selectedCat.subcategories.map(
+        (e) => e.subcategoryTitle,
       )
-      return selectedCat.subcategories.map((e) => {
-        return {
-          title: e.subcategoryTitle,
-          id: e.categoryId,
-        }
-      })
+      return {
+        enumIds,
+        enumTitles,
+      }
     }
   }
 
@@ -147,12 +145,13 @@ const PostForm = ({ id }) => {
       category: { type: 'string' },
       category: {
         type: 'string',
-        enum: catList.id,
-        enumNames: catList.title,
+        enum: catList,
+        enumNames: catListNames,
       },
       subcategory: {
         type: 'string',
         enum: [],
+        enumNames: [],
       },
       keywords: {
         type: 'array',
@@ -190,8 +189,8 @@ const PostForm = ({ id }) => {
   if (formData.category) {
     schema.properties.subcategory = {
       ...schema.properties.subcategory,
-      enum: getSubcategory(formData.category).id,
-      enumNames: getSubcategory(formData.category).title,
+      enum: getSubcategory(formData.category).enumIds,
+      enumNames: getSubcategory(formData.category).enumTitles,
     }
   }
 
@@ -241,7 +240,7 @@ const PostForm = ({ id }) => {
         query: { _id: formData._id },
       }),
     )
-    navigate('/posts')
+    navigate('/aPosts')
   }
 
   const showKeywords = () =>
