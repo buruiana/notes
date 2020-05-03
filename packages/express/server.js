@@ -74,7 +74,7 @@ app.post('/api/read', async (req, res) => {
   if (!req.body.info) req.body.info = {}
   const {
     modelType,
-    info: { limit = 0, skip = 0, sort = 'desc' },
+    info: { limit = 0, skip = 0, sort = { datetime: -1 } },
     query,
   } = req.body
 
@@ -99,6 +99,28 @@ app.post('/api/read', async (req, res) => {
     .countDocuments(query)
     .exec((error, count) =>
       error ? res.status(500).send(error) : getCollection(count),
+    )
+})
+
+app.post('/api/search', async (req, res) => {
+  const { modelType, info } = req.body
+  const model = getMod(modelType)
+
+  model
+    .find({
+      $or: [
+        { title: { $regex: info.search, $options: 'i' } },
+        { longDescription: { $regex: info.search, $options: 'i' } },
+        { content: { $regex: info.search, $options: 'i' } },
+      ],
+    })
+    .sort({ datetime: -1 })
+    .exec((error, collection) =>
+      error
+        ? res.status(500).send(error)
+        : res.status(200).json({
+            collection,
+          }),
     )
 })
 
