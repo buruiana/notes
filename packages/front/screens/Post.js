@@ -143,13 +143,13 @@ const Post = ({ id }) => {
       {renderPost()}
       <div className="date-more">
         <span>{new Date(datetime).toDateString()}</span>
-        {likeFeature.status && (
+        {likeFeature.active && (
           <span>
             <Likes count={likes.count} onLikeClick={onLikeClick} />
           </span>
         )}
       </div>
-      {commentFeature.status && (
+      {commentFeature.active && (
         <Link
           color="textPrimary"
           href="#"

@@ -17,12 +17,12 @@ const Features = () => {
   const addNew = () => navigate('/featureform')
   const renderFeatures = () => {
     return features.map((feature) => {
-      const { _id: featureId, name, status } = feature
+      const { _id: featureId, name, active } = feature
       const onEdit = () => navigate(`/featureform/${name}`)
       return (
         <TableRow key={featureId}>
           <TableCell>{name}</TableCell>
-          <TableCell>{status ? 'enabled' : 'disabled'}</TableCell>
+          <TableCell>{active ? 'enabled' : 'disabled'}</TableCell>
           <TableCell align="right">
             <DeleteRounded
               onClick={() => onDelete(featureId)}

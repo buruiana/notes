@@ -27,7 +27,7 @@ const FeatureForm = ({ id }) => {
     required: ['name'],
     properties: {
       name: { type: 'string' },
-      status: { type: 'boolean', default: false },
+      active: { type: 'boolean', default: false },
     },
   }
 

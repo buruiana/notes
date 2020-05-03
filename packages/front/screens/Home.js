@@ -9,9 +9,9 @@ import React, { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 import { useDispatch, useSelector } from 'react-redux'
 import MainHeader from '../components/MainHeader'
-import MorePosts from '../components/MorePosts'
 import Pagination from '../components/Pagination'
 import PostList from '../components/PostList'
+import SimilarPosts from '../components/SimilarPosts'
 
 const limit = 2
 
@@ -31,8 +31,8 @@ const Home = ({ cat, subcat }) => {
     total = useSelector(postSelectors.postTotalSelector) || 0
   }
 
-  const morepostsFeature =
-    useSelector(featureSelectors.featuresByNameSelector)('moreposts') || {}
+  const similarpostsFeature =
+    useSelector(featureSelectors.featuresByNameSelector)('similar_posts') || {}
 
   const showPagination = posts.length < total
 
@@ -76,7 +76,7 @@ const Home = ({ cat, subcat }) => {
         <MainHeader />
         <PostList posts={posts} cat={cat} subcat={subcat} />
         {showPagination && <Pagination onClickMore={onClickMore} />}
-        {morepostsFeature.status && <MorePosts />}
+        {similarpostsFeature.active && <SimilarPosts />}
       </Grid>
     </Container>
   )

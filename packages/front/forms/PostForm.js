@@ -31,7 +31,13 @@ const PostForm = ({ id }) => {
   const { content, priority, category } = record
 
   const { categories = [] } = useSelector(categorySelectors.categorySelector)
-  const catList = categories.map((cat) => cat.categoryTitle) || []
+  const catList =
+    categories.map((cat) => {
+      return {
+        title: cat.categoryTitle,
+        id: cat.categoryId,
+      }
+    }) || []
 
   const editor = useRef(null)
   const focusEditor = () => {
@@ -85,13 +91,17 @@ const PostForm = ({ id }) => {
     }
   }, [])
 
-  const getSubcategory = (cat) => {
+  const getSubcategory = (catId) => {
     if (cat) {
       const selectedCat = categories.find(
-        (category) =>
-          category.categoryTitle.toLowerCase() === cat.toLowerCase(),
+        (category) => category.categoryId.toLowerCase() === catId.toLowerCase(),
       )
-      return selectedCat.subcategories.map((e) => e.subcategoryTitle)
+      return selectedCat.subcategories.map((e) => {
+        return {
+          title: e.subcategoryTitle,
+          id: e.categoryId,
+        }
+      })
     }
   }
 
@@ -137,7 +147,8 @@ const PostForm = ({ id }) => {
       category: { type: 'string' },
       category: {
         type: 'string',
-        enum: catList,
+        enum: catList.id,
+        enumNames: catList.title,
       },
       subcategory: {
         type: 'string',
@@ -179,7 +190,8 @@ const PostForm = ({ id }) => {
   if (formData.category) {
     schema.properties.subcategory = {
       ...schema.properties.subcategory,
-      enum: getSubcategory(formData.category),
+      enum: getSubcategory(formData.category).id,
+      enumNames: getSubcategory(formData.category).title,
     }
   }
 

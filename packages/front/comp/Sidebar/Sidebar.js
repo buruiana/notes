@@ -88,6 +88,29 @@ const Sidebar = (props) => {
     ))
   }
 
+  const renderAdmin = (
+    <List className={classes.list}>
+      {['Features', 'Posts', 'Categories'].map((text, index) => {
+        const listItemClasses = classNames({
+          [' ' + classes[color]]: activeRoute(),
+        })
+        return (
+          <ListItem
+            button
+            key={text}
+            onClick={() => onClick({ text })}
+            className={classes.itemLink + listItemClasses}
+          >
+            <ListItemText
+              primary={text}
+              className={classNames(classes.itemText, whiteFontClasses)}
+            />
+          </ListItem>
+        )
+      })}
+    </List>
+  )
+
   const whiteFontClasses = classNames({
     [' ' + classes.whiteFont]: activeRoute(layout + path),
   })
@@ -175,7 +198,8 @@ const Sidebar = (props) => {
         >
           {brand}
           <div className={classes.sidebarWrapper}>
-            <List>{links}</List>
+            {links}
+            {renderAdmin}
           </div>
           {image !== undefined ? (
             <div

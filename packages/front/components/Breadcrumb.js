@@ -8,22 +8,25 @@ const handleClick = (event) => {
   navigate(`${event.target.href}`)
 }
 
-const Breadcrumb = ({ category, subcategory }) => (
-  <Breadcrumbs aria-label="breadcrumb" className="breadCrumbWrapper">
-    <Link color="inherit" href={`/${category}`} onClick={handleClick}>
-      {category}
-    </Link>
-    {subcategory && (
-      <Link
-        color="textPrimary"
-        href={`/${category}/${subcategory}`}
-        onClick={handleClick}
-        aria-current="page"
-      >
-        {subcategory}
+const Breadcrumb = ({ category, subcategory }) => {
+  if (!category) return null
+  return (
+    <Breadcrumbs aria-label="breadcrumb" className="breadCrumbWrapper">
+      <Link color="inherit" href={`/${category}`} onClick={handleClick}>
+        {category}
       </Link>
-    )}
-  </Breadcrumbs>
-)
+      {subcategory && (
+        <Link
+          color="textPrimary"
+          href={`/${category}/${subcategory}`}
+          onClick={handleClick}
+          aria-current="page"
+        >
+          {subcategory}
+        </Link>
+      )}
+    </Breadcrumbs>
+  )
+}
 
 export default Breadcrumb

@@ -33,7 +33,7 @@ const routes = () => {
     useSelector(featureSelectors.featuresByNameSelector)('ga') || {}
 
   useEffect(() => {
-    if (gaFeature.status) {
+    if (gaFeature.active) {
       ReactGA.initialize('UA-000000-01', {
         debug: true,
         titleCase: false,
