@@ -32,6 +32,36 @@ mongoose.connect(
     error ? error : console.log(`Successfully connected to ${mongo_uri}`),
 )
 
+app.post('/api/totalsByCategory', async (req, res) => {
+  const model = getMod('post')
+
+  model
+    .aggregate([
+      {
+        $group: {
+          _id: '$category',
+          count: {
+            $sum: 1,
+          },
+        },
+      },
+      {
+        $project: {
+          category: '$_id',
+          count: 1,
+          _id: 0,
+        },
+      },
+    ])
+    .exec((error, collection) =>
+      error
+        ? res.status(500).send(error)
+        : res.status(200).json({
+            collection,
+          }),
+    )
+})
+
 app.post('/api/read', async (req, res) => {
   if (!req.body.info) req.body.info = {}
   const {

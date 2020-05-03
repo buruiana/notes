@@ -6,6 +6,7 @@ const postService = createSlice({
   initialState: {
     posts: [],
     total: 0,
+    totalsByCategory: {},
   },
   reducers: {
     handlePosts: () => undefined,
@@ -15,6 +16,10 @@ const postService = createSlice({
     },
     resetPosts: (state) => {
       state.posts = []
+    },
+    getTotalsByCategory: () => undefined,
+    setTotalsByCategory: (state, action) => {
+      state.totalsByCategory = action.payload.totalsByCategory
     },
   },
 })

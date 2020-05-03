@@ -46,6 +46,22 @@ export function* watchHandlePosts(action) {
   }
 }
 
+export function* watchTotalsByCategory(action) {
+  let response = {}
+  try {
+    response = yield callBackend({
+      operation: 'totalsByCategory',
+    })
+
+    const { collection = [] } = response.data
+
+    yield put(postActions.setTotalsByCategory({ totals: collection }))
+  } catch (error) {
+    yield put(alertActions.setAlert(error.message))
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest('post/handlePosts', watchHandlePosts)
+  yield takeLatest('post/getTotalsByCategory', watchTotalsByCategory)
 }
