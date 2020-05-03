@@ -55,7 +55,7 @@ export function* watchTotalsByCategory(action) {
 
     const { collection = [] } = response.data
 
-    yield put(postActions.setTotalsByCategory({ totals: collection }))
+    yield put(postActions.setTotalsByCategory({ totalsByCategory: collection }))
   } catch (error) {
     yield put(alertActions.setAlert(error.message))
   }

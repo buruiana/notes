@@ -47,7 +47,7 @@ const styles = {
 
 const useStyles = makeStyles(styles)
 
-const PostList = ({ posts }) => {
+const PostList = ({ posts, categories }) => {
   const classes = useStyles()
   const renderPosts = () => {
     return posts.map((post) => {
@@ -72,7 +72,11 @@ const PostList = ({ posts }) => {
             <Link className="generic_link" onClick={onTitleClick}>
               <h4 className={classes.cardTitleWhite}>{title}</h4>
             </Link>
-            <Breadcrumb category={category} subcategory={subcategory} />
+            <Breadcrumb
+              category={category}
+              subcategory={subcategory}
+              categories={categories}
+            />
           </CardHeader>
           <CardBody>
             <div className={classes.typo}>

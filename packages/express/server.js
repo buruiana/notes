@@ -39,17 +39,25 @@ app.post('/api/totalsByCategory', async (req, res) => {
     .aggregate([
       {
         $group: {
-          _id: '$category',
-          count: {
-            $sum: 1,
+          _id: { category: '$category', subcategory: '$subcategory' },
+          num: { $sum: 1 },
+        },
+      },
+      {
+        $group: {
+          _id: '$_id.category',
+          bySubCatCount: {
+            $push: { subcategory: '$_id.subcategory', count: '$num' },
           },
         },
       },
       {
         $project: {
-          category: '$_id',
-          count: 1,
-          _id: 0,
+          _id: 1,
+          bySubCatCount: 1,
+          byCatCount: {
+            $sum: '$bySubCatCount.count',
+          },
         },
       },
     ])

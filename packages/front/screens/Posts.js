@@ -18,9 +18,9 @@ import { DeleteRounded } from '@material-ui/icons'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import EditIcon from '@material-ui/icons/Edit'
 import { navigate } from '@reach/router'
-import isEmpty from 'lodash/isEmpty'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { getCategoryName } from '../utils/common'
 
 const Posts = () => {
   const dispatch = useDispatch()
@@ -81,11 +81,6 @@ const Posts = () => {
         category,
         subcategory,
       } = post
-
-      const getCategoryName = (cat) => {
-        if (isEmpty(categories)) return { subcategories: [] }
-        return categories.find((e) => e.categoryId === cat).categoryTitle
-      }
 
       const onTitleClick = () =>
         navigate(`/${category}/${subcategory}/${postUrl}`)
@@ -150,7 +145,7 @@ const Posts = () => {
               {title}
             </Link>
           </TableCell>
-          <TableCell>{getCategoryName(category)}</TableCell>
+          <TableCell>{getCategoryName(category, categories)}</TableCell>
           <TableCell>{shortDescription}</TableCell>
           <TableCell>{new Date(datetime).toDateString()}</TableCell>
           <TableCell align="right">

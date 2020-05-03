@@ -1,4 +1,5 @@
 import {
+  categorySelectors,
   commentActions,
   commentSelectors,
   featureSelectors,
@@ -38,6 +39,7 @@ const Post = ({ id }) => {
   )
   const comments =
     useSelector(commentSelectors.commentsByPostIdSelector)(postId) || []
+  const { categories = [] } = useSelector(categorySelectors.categorySelector)
 
   useEffect(() => {
     if (!post._id) {
@@ -98,7 +100,11 @@ const Post = ({ id }) => {
     return (
       <div>
         <h2>{title}</h2>
-        <Breadcrumb category={category} subcategory={subcategory} />
+        <Breadcrumb
+          category={category}
+          subcategory={subcategory}
+          categories={categories}
+        />
 
         {content && (
           <div

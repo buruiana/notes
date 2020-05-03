@@ -1,4 +1,5 @@
 import {
+  categorySelectors,
   featureSelectors,
   postActions,
   postSelectors,
@@ -17,22 +18,29 @@ const limit = 2
 
 const Home = ({ cat, subcat }) => {
   const dispatch = useDispatch()
+  const catId = cat ? useSelector(categorySelectors.idByCatTitle)(cat) : ''
+
+  const subcatId =
+    cat && subcat
+      ? useSelector(categorySelectors.idByCatSubCatTitle)(cat, subcat)
+      : ''
   let posts = []
   let total = 0
 
-  if (subcat) {
-    posts = useSelector(postSelectors.postByCatSubCat)(cat, subcat) || []
-    total = useSelector(postSelectors.postTotalSelector) || 0
-  } else if (cat) {
-    posts = useSelector(postSelectors.postByCat)(cat) || []
-    total = useSelector(postSelectors.postTotalSelector) || 0
+  if (subcatId) {
+    posts = useSelector(postSelectors.postByCatSubCat)(catId, subcatId) || []
+    total = useSelector(postSelectors.totalsCatSubCat)({ catId, subcatId })
+  } else if (catId) {
+    posts = useSelector(postSelectors.postByCat)(catId) || []
+    total = useSelector(postSelectors.totalsCatSubCat)({ catId })
   } else {
     posts = useSelector(postSelectors.postSelector) || []
-    total = useSelector(postSelectors.postTotalSelector) || 0
+    total = useSelector(postSelectors.totalsCatSubCat)({})
   }
 
   const similarpostsFeature =
     useSelector(featureSelectors.featuresByNameSelector)('similar_posts') || {}
+  const { categories = [] } = useSelector(categorySelectors.categorySelector)
 
   const showPagination = posts.length < total
 
@@ -74,7 +82,12 @@ const Home = ({ cat, subcat }) => {
       </Helmet>
       <Grid item xs={12}>
         <MainHeader />
-        <PostList posts={posts} cat={cat} subcat={subcat} />
+        <PostList
+          posts={posts}
+          cat={cat}
+          subcat={subcat}
+          categories={categories}
+        />
         {showPagination && <Pagination onClickMore={onClickMore} />}
         {similarpostsFeature.active && <SimilarPosts />}
       </Grid>
