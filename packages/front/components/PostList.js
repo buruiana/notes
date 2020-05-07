@@ -5,6 +5,7 @@ import React from 'react'
 import Card from '../comp/Card/Card.js'
 import CardBody from '../comp/Card/CardBody.js'
 import CardHeader from '../comp/Card/CardHeader.js'
+import { getCategoryName } from '../utils/common'
 import Breadcrumb from './Breadcrumb'
 import Keywords from './Keywords'
 
@@ -63,8 +64,15 @@ const PostList = ({ posts, categories }) => {
         keywords,
       } = post
 
+      const categoryName = getCategoryName({ category, categories })
+      const subcategoryName = getCategoryName({
+        category,
+        subcategory,
+        categories,
+      })
+
       const onTitleClick = () =>
-        navigate(`/${category}/${subcategory}/${postUrl}`)
+        navigate(`/${categoryName}/${subcategoryName}/${postUrl}`)
 
       return (
         <Card key={postId}>
@@ -72,11 +80,7 @@ const PostList = ({ posts, categories }) => {
             <Link className="generic_link" onClick={onTitleClick}>
               <h4 className={classes.cardTitleWhite}>{title}</h4>
             </Link>
-            <Breadcrumb
-              category={category}
-              subcategory={subcategory}
-              categories={categories}
-            />
+            <Breadcrumb category={categoryName} subcategory={subcategoryName} />
           </CardHeader>
           <CardBody>
             <div className={classes.typo}>

@@ -7,6 +7,7 @@ const postService = createSlice({
     posts: [],
     total: 0,
     totalsByCategory: {},
+    search: {},
   },
   reducers: {
     handlePosts: () => undefined,
@@ -14,12 +15,14 @@ const postService = createSlice({
       state.posts = action.payload.posts
       state.total = action.payload.total
     },
-    resetPosts: (state) => {
-      state.posts = []
-    },
+    resetPosts: (state) => (state.posts = []),
     getTotalsByCategory: () => undefined,
     setTotalsByCategory: (state, action) => {
       state.totalsByCategory = action.payload.totalsByCategory
+    },
+    search: () => undefined,
+    setSearchResults: (state, action) => {
+      state.search = action.payload
     },
   },
 })

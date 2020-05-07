@@ -19,6 +19,7 @@ import Breadcrumb from '../components/Breadcrumb'
 import CommentsList from '../components/CommentsList'
 import Likes from '../components/Likes'
 import CommentForm from '../forms/CommentForm'
+import { getCategoryName } from '../utils/common'
 
 const Post = ({ id }) => {
   const dispatch = useDispatch()
@@ -96,15 +97,18 @@ const Post = ({ id }) => {
       }),
     )
 
+  const categoryName = getCategoryName({ category, categories })
+  const subcategoryName = getCategoryName({
+    category,
+    subcategory,
+    categories,
+  })
+
   const renderPost = () => {
     return (
       <div>
         <h2>{title}</h2>
-        <Breadcrumb
-          category={category}
-          subcategory={subcategory}
-          categories={categories}
-        />
+        <Breadcrumb category={categoryName} subcategory={subcategoryName} />
 
         {content && (
           <div

@@ -61,7 +61,29 @@ export function* watchTotalsByCategory(action) {
   }
 }
 
+export function* watchSearch(action) {
+  const { operation, modelType, info, query } = action.payload
+  let response = {}
+  try {
+    response = yield callBackend({
+      operation,
+      modelType,
+      query,
+      info,
+    })
+
+    const { collection = [], total = 0 } = response.data
+
+    yield put(
+      postActions.setSearchResults({ term: info.search, collection, total }),
+    )
+  } catch (error) {
+    yield put(alertActions.setAlert(error.message))
+  }
+}
+
 export default function* rootSaga() {
   yield takeLatest('post/handlePosts', watchHandlePosts)
   yield takeLatest('post/getTotalsByCategory', watchTotalsByCategory)
+  yield takeLatest('post/search', watchSearch)
 }

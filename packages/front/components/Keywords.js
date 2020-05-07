@@ -6,7 +6,6 @@ const Keywords = ({ keywords }) =>
     <Chip
       label={keyword.name}
       variant="outlined"
-      color="primary"
       key={`${keyword}_${Math.floor(Math.random() * 100000 + 1)}`}
     />
   ))

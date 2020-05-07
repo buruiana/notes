@@ -2,7 +2,6 @@ import {
   categorySelectors,
   featureSelectors,
   postActions,
-  postSelectors,
 } from '@just4dev/services'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
@@ -13,30 +12,29 @@ import MainHeader from '../components/MainHeader'
 import Pagination from '../components/Pagination'
 import PostList from '../components/PostList'
 import SimilarPosts from '../components/SimilarPosts'
+import { usePosts } from '../hooks/usePosts'
 
 const limit = 2
 
-const Home = ({ cat, subcat }) => {
+const Home = ({ cat, subcat, q }) => {
   const dispatch = useDispatch()
-  const catId = cat ? useSelector(categorySelectors.idByCatTitle)(cat) : ''
 
-  const subcatId =
-    cat && subcat
-      ? useSelector(categorySelectors.idByCatSubCatTitle)(cat, subcat)
-      : ''
-  let posts = []
-  let total = 0
+  useEffect(() => {
+    if (q) {
+      dispatch(
+        postActions.search({
+          operation: 'search',
+          modelType: 'post',
+          info: {
+            search: q,
+          },
+          query: {},
+        }),
+      )
+    }
+  }, [q])
 
-  if (subcatId) {
-    posts = useSelector(postSelectors.postByCatSubCat)(catId, subcatId) || []
-    total = useSelector(postSelectors.totalsCatSubCat)({ catId, subcatId })
-  } else if (catId) {
-    posts = useSelector(postSelectors.postByCat)(catId) || []
-    total = useSelector(postSelectors.totalsCatSubCat)({ catId })
-  } else {
-    posts = useSelector(postSelectors.postSelector) || []
-    total = useSelector(postSelectors.totalsCatSubCat)({})
-  }
+  const { posts, total } = usePosts({ cat, subcat, q })
 
   const similarpostsFeature =
     useSelector(featureSelectors.featuresByNameSelector)('similar_posts') || {}

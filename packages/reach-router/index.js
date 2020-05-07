@@ -56,6 +56,7 @@ const routes = () => {
           <PostForm path="postform/:id" />
           <PostForm path="postform/" />
           <Posts path="aPosts" />
+          <Home path="/search/:q" />
           <Home path="/:cat" />
           <Home path="/:cat/:subcat" />
           <Post path="/:cat/:subcat/:id" />
