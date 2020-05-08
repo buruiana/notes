@@ -131,8 +131,7 @@ const Post = ({ id }) => {
       }),
     )
 
-  const categoryName = getCategoryName({ category, categories })
-  const subcategoryName = getCategoryName({
+  const { categoryTitle, subcategoryTitle } = getCategoryName({
     category,
     subcategory,
     categories,
@@ -143,7 +142,7 @@ const Post = ({ id }) => {
       <Card key={postId} className="noShadow">
         <CardHeader color="primary" className="noShadow">
           <h4 className={classes.cardTitleWhite}>{title}</h4>
-          <Breadcrumb category={categoryName} subcategory={subcategoryName} />
+          <Breadcrumb category={categoryTitle} subcategory={subcategoryTitle} />
         </CardHeader>
         <CardBody>
           {content && (

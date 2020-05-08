@@ -138,16 +138,24 @@ const Posts = () => {
         ])
       }
 
+      const { categoryTitle, subcategoryTitle } = getCategoryName({
+        category,
+        subcategory,
+        categories,
+      })
+
       return (
         <TableRow key={postId}>
           <TableCell component="th" scope="row">
             <Link onClick={onTitleClick} className="generic_link">
               {title}
             </Link>
+            <div>
+              {categoryTitle} / {subcategoryTitle}
+            </div>
+            <div>{shortDescription}</div>
+            <div>{new Date(datetime).toDateString()}</div>
           </TableCell>
-          <TableCell>{getCategoryName(category, categories)}</TableCell>
-          <TableCell>{shortDescription}</TableCell>
-          <TableCell>{new Date(datetime).toDateString()}</TableCell>
           <TableCell align="right">
             <DeleteRounded
               onClick={() => onDelete(postId)}

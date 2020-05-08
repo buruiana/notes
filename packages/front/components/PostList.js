@@ -64,15 +64,14 @@ const PostList = ({ posts, categories }) => {
         keywords,
       } = post
 
-      const categoryName = getCategoryName({ category, categories })
-      const subcategoryName = getCategoryName({
+      const { categoryTitle, subcategoryTitle } = getCategoryName({
         category,
         subcategory,
         categories,
       })
 
       const onTitleClick = () =>
-        navigate(`/${categoryName}/${subcategoryName}/${postUrl}`)
+        navigate(`/${categoryTitle}/${subcategoryTitle}/${postUrl}`)
 
       return (
         <Card key={postId}>
@@ -80,7 +79,10 @@ const PostList = ({ posts, categories }) => {
             <Link className="generic_link" onClick={onTitleClick}>
               <h4 className={classes.cardTitleWhite}>{title}</h4>
             </Link>
-            <Breadcrumb category={categoryName} subcategory={subcategoryName} />
+            <Breadcrumb
+              category={categoryTitle}
+              subcategory={subcategoryTitle}
+            />
           </CardHeader>
           <CardBody>
             <div className={classes.typo}>
