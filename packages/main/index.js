@@ -35,6 +35,17 @@ notesStore.dispatch(
     operation: 'totalsByCategory',
   }),
 )
+notesStore.dispatch(
+  postActions.handlePosts({
+    operation: 'read',
+    modelType: 'post',
+    info: {
+      skip: 0,
+      limit: 100,
+    },
+    query: {},
+  }),
+)
 
 render(
   <Provider store={notesStore}>

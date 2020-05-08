@@ -14,7 +14,7 @@ import PostList from '../components/PostList'
 import SimilarPosts from '../components/SimilarPosts'
 import { usePosts } from '../hooks/usePosts'
 
-const limit = 2
+const limit = 20
 
 const Home = ({ cat, subcat, q }) => {
   const dispatch = useDispatch()
@@ -41,21 +41,6 @@ const Home = ({ cat, subcat, q }) => {
   const { categories = [] } = useSelector(categorySelectors.categorySelector)
 
   const showPagination = posts.length < total
-
-  useEffect(() => {
-    if (!posts.length)
-      dispatch(
-        postActions.handlePosts({
-          operation: 'read',
-          modelType: 'post',
-          info: {
-            skip: 0,
-            limit,
-          },
-          query: {},
-        }),
-      )
-  }, [])
 
   const onClickMore = () => {
     dispatch(

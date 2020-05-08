@@ -12,7 +12,7 @@ const appStyle = (theme) => ({
   },
   mainPanel: {
     [theme.breakpoints.up('md')]: {
-      width: `calc(100% - ${drawerWidth}px)`,
+      width: `calc(100% - ${drawerWidth - 20}px)`,
     },
     overflow: 'auto',
     position: 'relative',
