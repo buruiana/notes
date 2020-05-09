@@ -4,7 +4,7 @@ import * as selectors from './selectors'
 const loginService = createSlice({
   name: 'backend',
   initialState: {
-    authenticated: false,
+    authenticated: true,
   },
   reducers: {
     signin: (state, action) => {

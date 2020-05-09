@@ -4,6 +4,7 @@ import {
   keywordActions,
   keywordSelectors,
   likeActions,
+  loginSelectors,
   postActions,
   postSelectors,
 } from '@just4dev/services'
@@ -24,9 +25,14 @@ import { getCategoryName } from '../utils/common'
 
 const Posts = () => {
   const dispatch = useDispatch()
+  const authenticated = useSelector(loginSelectors.loginSelector)
   const posts = useSelector(postSelectors.postSelector) || []
   const { categories = [] } = useSelector(categorySelectors.categorySelector)
   const allKeywords = useSelector(keywordSelectors.keywordSelector) || []
+
+  useEffect(() => {
+    if (!authenticated) navigate(`/`)
+  }, [authenticated])
 
   useEffect(() => {
     dispatch(
@@ -57,9 +63,9 @@ const Posts = () => {
         query: {},
       }),
     )
-    return () => {
-      dispatch(postActions.resetPosts())
-    }
+    // return () => {
+    //   dispatch(postActions.resetPosts())
+    // }
   }, [])
 
   const renderPosts = () => {
@@ -71,8 +77,8 @@ const Posts = () => {
           </TableCell>
         </TableRow>
       )
-    return posts.map((post) => {
-      const {
+    return posts.map(
+      ({
         _id: postId,
         title,
         postUrl,
@@ -80,97 +86,98 @@ const Posts = () => {
         datetime,
         category,
         subcategory,
-      } = post
+      }) => {
+        const onTitleClick = () =>
+          navigate(`/${category}/${subcategory}/${postUrl}`)
+        const onEdit = () => navigate(`/postform/${postUrl}`)
 
-      const onTitleClick = () =>
-        navigate(`/${category}/${subcategory}/${postUrl}`)
-      const onEdit = () => navigate(`/postform/${postUrl}`)
-
-      const onDelete = async (postId) => {
-        const post = posts.find((post) => post._id === postId)
-        const { keywords } = post
-        keywords.map((keyword) => {
-          const data = allKeywords.find((e) => e.name === keyword.name)
-
-          if (data.count >= 2) {
+        const onDelete = async (postId) => {
+          const post = posts.find((post) => post._id === postId)
+          const { keywords } = post
+          keywords.map((keyword) => {
+            const data = allKeywords.find((e) => e.name === keyword.name)
+            if (data) {
+              if (data.count >= 2) {
+                dispatch(
+                  keywordActions.handleKeywords({
+                    operation: 'update',
+                    modelType: 'keyword',
+                    query: { _id: data._id },
+                    info: { count: parseInt(data.count) - 1 },
+                  }),
+                )
+              } else {
+                dispatch(
+                  keywordActions.handleKeywords({
+                    operation: 'deleteOne',
+                    modelType: 'keyword',
+                    query: { _id: data._id },
+                  }),
+                )
+              }
+            }
+          })
+          await Promise.all([
             dispatch(
-              keywordActions.handleKeywords({
-                operation: 'update',
-                modelType: 'keyword',
-                query: { _id: data._id },
-                info: { count: parseInt(data.count) - 1 },
-              }),
-            )
-          } else {
-            dispatch(
-              keywordActions.handleKeywords({
+              likeActions.handleLikes({
                 operation: 'deleteOne',
-                modelType: 'keyword',
-                query: { _id: data._id },
+                modelType: 'like',
+                query: { postId },
               }),
-            )
-          }
+            ),
+
+            dispatch(
+              commentActions.handleComments({
+                operation: 'deleteMany',
+                modelType: 'comment',
+                query: { postId },
+              }),
+            ),
+
+            dispatch(
+              postActions.handlePosts({
+                operation: 'deleteOne',
+                modelType: 'post',
+                query: { _id: postId },
+              }),
+            ),
+          ])
+        }
+
+        const { categoryTitle, subcategoryTitle } = getCategoryName({
+          category,
+          subcategory,
+          categories,
         })
-        await Promise.all([
-          dispatch(
-            likeActions.handleLikes({
-              operation: 'deleteOne',
-              modelType: 'like',
-              query: { postId },
-            }),
-          ),
 
-          dispatch(
-            commentActions.handleComments({
-              operation: 'deleteMany',
-              modelType: 'comment',
-              query: { postId },
-            }),
-          ),
-
-          dispatch(
-            postActions.handlePosts({
-              operation: 'deleteOne',
-              modelType: 'post',
-              query: { _id: postId },
-            }),
-          ),
-        ])
-      }
-
-      const { categoryTitle, subcategoryTitle } = getCategoryName({
-        category,
-        subcategory,
-        categories,
-      })
-
-      return (
-        <TableRow key={postId}>
-          <TableCell component="th" scope="row">
-            <Link onClick={onTitleClick} className="generic_link">
-              {title}
-            </Link>
-            <div>
-              {categoryTitle} / {subcategoryTitle}
-            </div>
-            <div>{shortDescription}</div>
-            <div>{new Date(datetime).toDateString()}</div>
-          </TableCell>
-          <TableCell align="right">
-            <DeleteRounded
-              onClick={() => onDelete(postId)}
-              color="primary"
-              className="generic_link"
-            />
-            <EditIcon
-              onClick={() => onEdit(postId)}
-              color="primary"
-              className="generic_link"
-            />
-          </TableCell>
-        </TableRow>
-      )
-    })
+        return (
+          <TableRow key={postId}>
+            <TableCell component="th" scope="row">
+              <Link onClick={onTitleClick} className="generic_link">
+                {title}
+              </Link>
+              <div>
+                {categoryTitle} / {subcategoryTitle}
+              </div>
+              <div>{new Date(datetime).toDateString()}</div>
+              <div>{shortDescription}</div>
+            </TableCell>
+            <TableCell align="right">
+              <DeleteRounded
+                onClick={() => onDelete(postId)}
+                color="primary"
+                className="generic_link"
+              />
+              <EditIcon
+                onClick={() => onEdit(postId)}
+                color="primary"
+                className="generic_link"
+              />
+            </TableCell>
+          </TableRow>
+        )
+      },
+    )
   }
   const addNew = () => navigate('/postform')
 

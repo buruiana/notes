@@ -38,7 +38,9 @@ const Home = ({ cat, subcat, q }) => {
 
   const similarpostsFeature =
     useSelector(featureSelectors.featuresByNameSelector)('similar_posts') || {}
-  const { categories = [] } = useSelector(categorySelectors.categorySelector)
+  const { categories = [] } = useSelector(
+    categorySelectors.categorySelector,
+  ) || { categories: [] }
 
   const showPagination = posts.length < total
 

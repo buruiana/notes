@@ -19,3 +19,5 @@ export const getCategoryName = ({ category, subcategory, categories }) => {
   }
   return null
 }
+
+export const sanitizeString = (str) => str.toLowerCase().trim()

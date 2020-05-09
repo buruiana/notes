@@ -18,6 +18,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { withTheme } from 'react-jsonschema-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { Theme as MuiTheme } from 'rjsf-material-ui'
+import { sanitizeString } from '../utils/common'
 
 const PostForm = ({ id }) => {
   const dispatch = useDispatch()
@@ -25,14 +26,20 @@ const PostForm = ({ id }) => {
 
   const authenticated = useSelector(loginSelectors.loginSelector)
   const keywords = useSelector(keywordSelectors.keywordSelector) || []
-  const record = useSelector(postSelectors.postByPostUrlSelector)(id) || {}
+  const record = id ? useSelector(postSelectors.postByPostUrlSelector)(id) : {}
+
   const [formData, setFormData] = useState(record)
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
+
   const { content, priority, category } = record
 
   const { categories = [] } = useSelector(categorySelectors.categorySelector)
-  const catList = categories.map((cat) => cat.categoryId)
+  const catListId = categories.map((cat) => cat.categoryId)
   const catListNames = categories.map((cat) => cat.categoryTitle)
+
+  useEffect(() => {
+    if (!authenticated) navigate(`/`)
+  }, [authenticated])
 
   const editor = useRef(null)
   const focusEditor = () => {
@@ -42,10 +49,6 @@ const PostForm = ({ id }) => {
   }
 
   useEffect(() => focusEditor(), [])
-
-  useEffect(() => {
-    if (authenticated) navigate(`/editor`)
-  }, [authenticated])
 
   useEffect(() => {
     if (!record._id) {
@@ -145,7 +148,7 @@ const PostForm = ({ id }) => {
       category: { type: 'string' },
       category: {
         type: 'string',
-        enum: catList,
+        enum: catListId,
         enumNames: catListNames,
       },
       subcategory: {
@@ -194,33 +197,73 @@ const PostForm = ({ id }) => {
     }
   }
 
-  const onSubmit = ({ formData }) => {
-    const contentState = editorState.getCurrentContent()
-    if (!record._id) {
-      formData.keywords.map((k) => {
-        const existing = keywords.find((e) => e.name === k.name)
+  const upsertKeywords = ({ formData }) => {
+    formData.keywords.map((k) => {
+      const sanitizedKeyword = sanitizeString(k.name)
+      const existingKeyword = keywords.find(
+        (e) => sanitizeString(e.name) === sanitizedKeyword,
+      )
 
-        if (!existing) {
+      if (!existingKeyword || (existingKeyword.count === 1 && record._id)) {
+        dispatch(
+          keywordActions.handleKeywords({
+            operation: 'create',
+            modelType: 'keyword',
+            info: { name: sanitizedKeyword, count: 1 },
+          }),
+        )
+      } else {
+        const newCount = record._id ? 0 : 1
+        dispatch(
+          keywordActions.handleKeywords({
+            operation: 'update',
+            modelType: 'keyword',
+            info: {
+              count: parseInt(existingKeyword.count) + newCount,
+            },
+            query: { _id: existingKeyword._id },
+          }),
+        )
+      }
+    })
+  }
+
+  const cleanKeywords = () => {
+    record.keywords.map((keyword) => {
+      const data = keywords.find(
+        (e) => sanitizeString(e.name) === sanitizeString(keyword.name),
+      )
+
+      if (data) {
+        if (data.count >= 2) {
           dispatch(
             keywordActions.handleKeywords({
-              operation: 'create',
+              operation: 'update',
               modelType: 'keyword',
-              info: { name: k.name.toLowerCase().trim(), count: 1 },
+              query: { _id: data._id },
+              info: { count: parseInt(data.count) - 1 },
             }),
           )
         } else {
           dispatch(
             keywordActions.handleKeywords({
-              operation: 'update',
+              operation: 'deleteOne',
               modelType: 'keyword',
-              info: {
-                count: parseInt(existing.count) + 1,
-              },
-              query: { _id: existing._id },
+              query: { _id: data._id },
             }),
           )
         }
-      })
+      }
+    })
+  }
+
+  const onSubmit = ({ formData }) => {
+    const contentState = editorState.getCurrentContent()
+    if (!record._id) {
+      upsertKeywords({ formData })
+    } else {
+      cleanKeywords()
+      upsertKeywords({ formData })
     }
 
     dispatch(

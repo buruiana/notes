@@ -28,11 +28,7 @@ const Header = (props) => {
   return (
     <AppBar className={classes.appBar + appBarClasses}>
       <Toolbar className={classes.container}>
-        <div className={classes.flex}>
-          <Button color="transparent" href="#" className={classes.title}>
-            'brand'
-          </Button>
-        </div>
+        <div className={classes.flex} />
         <Hidden smDown implementation="css">
           <div className={classes.searchWrapper}>
             <CustomInput

@@ -1,3 +1,4 @@
+import { loginSelectors } from '@just4dev/services'
 import Drawer from '@material-ui/core/Drawer'
 import Hidden from '@material-ui/core/Hidden'
 import List from '@material-ui/core/List'
@@ -7,13 +8,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import LowPriorityIcon from '@material-ui/icons/LowPriority'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import styles from '../../assets/jss/material-dashboard-react/components/sidebarStyle.js'
 
 const useStyles = makeStyles(styles)
 
 const Sidebar = (props) => {
   const classes = useStyles()
-
+  const authenticated = useSelector(loginSelectors.loginSelector)
   const activeRoute = () => false
 
   const {
@@ -199,7 +201,7 @@ const Sidebar = (props) => {
           {brand}
           <div className={classes.sidebarWrapper}>
             {links}
-            {renderAdmin}
+            {authenticated && renderAdmin}
           </div>
           {image !== undefined ? (
             <div
