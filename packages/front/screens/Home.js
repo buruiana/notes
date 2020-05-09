@@ -8,7 +8,6 @@ import Grid from '@material-ui/core/Grid'
 import React, { useEffect } from 'react'
 import { Helmet } from 'react-helmet'
 import { useDispatch, useSelector } from 'react-redux'
-import MainHeader from '../components/MainHeader'
 import Pagination from '../components/Pagination'
 import PostList from '../components/PostList'
 import SimilarPosts from '../components/SimilarPosts'
@@ -66,7 +65,6 @@ const Home = ({ cat, subcat, q }) => {
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
       <Grid item xs={12}>
-        <MainHeader />
         <PostList
           posts={posts}
           cat={cat}
