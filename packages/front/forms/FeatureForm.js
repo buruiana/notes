@@ -1,8 +1,4 @@
-import {
-  featureActions,
-  featureSelectors,
-  loginSelectors,
-} from '@just4dev/services'
+import { featureActions, featureSelectors } from '@just4dev/services'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import { navigate } from '@reach/router'
@@ -10,17 +6,15 @@ import React from 'react'
 import { withTheme } from 'react-jsonschema-form'
 import { useDispatch, useSelector } from 'react-redux'
 import { Theme as MuiTheme } from 'rjsf-material-ui'
+import { useAuth } from '../hooks/useAuth'
 import '../react-draft-wysiwyg.css'
 
 const FeatureForm = ({ id }) => {
   const dispatch = useDispatch()
   const Form = withTheme(MuiTheme)
-  const authenticated = useSelector(loginSelectors.loginSelector)
-  const feature = useSelector(featureSelectors.featuresByNameSelector)(id) || []
+  const feature = useSelector(featureSelectors.featuresByIdSelector)(id) || []
 
-  // useEffect(() => {
-  //   if (!authenticated) navigate(`/home`)
-  // }, [authenticated])
+  useAuth()
 
   const schema = {
     type: 'object',
@@ -42,7 +36,7 @@ const FeatureForm = ({ id }) => {
         query: { _id: formData._id },
       }),
     )
-    navigate('/Features')
+    navigate('/aFeatures')
   }
 
   return (

@@ -1,49 +1,32 @@
-import {
-  categorySelectors,
-  featureSelectors,
-  postActions,
-} from '@just4dev/services'
+import { postActions } from '@just4dev/services'
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
-import React, { useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { Helmet } from 'react-helmet'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import Pagination from '../components/Pagination'
 import PostList from '../components/PostList'
 import SimilarPosts from '../components/SimilarPosts'
+import { useCategories } from '../hooks/useCategories'
+import { useFeatures } from '../hooks/useFeatures'
 import { usePosts } from '../hooks/usePosts'
+import { useSearch } from '../hooks/useSearch'
 
 const limit = 20
 
 const Home = ({ cat, subcat, q }) => {
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    if (q) {
-      dispatch(
-        postActions.search({
-          operation: 'search',
-          modelType: 'post',
-          info: {
-            search: q,
-          },
-          query: {},
-        }),
-      )
-    }
-  }, [q])
+  useSearch({ q })
 
   const { posts, total } = usePosts({ cat, subcat, q })
-
-  const similarpostsFeature =
-    useSelector(featureSelectors.featuresByNameSelector)('similar_posts') || {}
-  const { categories = [] } = useSelector(
-    categorySelectors.categorySelector,
-  ) || { categories: [] }
+  console.log('########## posts', posts)
+  const { similarpostsFeature } = useFeatures()
+  const { categories } = useCategories()
 
   const showPagination = posts.length < total
 
-  const onClickMore = () => {
+  const onClickMore = useCallback(() => {
     dispatch(
       postActions.handlePosts({
         operation: 'read',
@@ -55,7 +38,7 @@ const Home = ({ cat, subcat, q }) => {
         query: {},
       }),
     )
-  }
+  }, [posts.length])
 
   return (
     <Container maxWidth="xl">

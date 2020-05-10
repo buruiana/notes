@@ -1,10 +1,7 @@
 import {
-  categorySelectors,
   commentActions,
   keywordActions,
-  keywordSelectors,
   likeActions,
-  loginSelectors,
   postActions,
   postSelectors,
 } from '@just4dev/services'
@@ -19,20 +16,22 @@ import { DeleteRounded } from '@material-ui/icons'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import EditIcon from '@material-ui/icons/Edit'
 import { navigate } from '@reach/router'
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useAuth } from '../hooks/useAuth'
 import { getCategoryName } from '../utils/common'
+import { useCategories } from './../hooks/useCategories'
+import { useKeywords } from './../hooks/useKeywords'
+
+const addNew = () => navigate('/postform')
 
 const Posts = () => {
   const dispatch = useDispatch()
-  const authenticated = useSelector(loginSelectors.loginSelector)
   const posts = useSelector(postSelectors.postSelector) || []
-  const { categories = [] } = useSelector(categorySelectors.categorySelector)
-  const allKeywords = useSelector(keywordSelectors.keywordSelector) || []
+  const { categories } = useCategories()
+  const { keywords: allKeywords } = useKeywords()
 
-  useEffect(() => {
-    if (!authenticated) navigate(`/`)
-  }, [authenticated])
+  useAuth()
 
   useEffect(() => {
     dispatch(
@@ -63,9 +62,6 @@ const Posts = () => {
         query: {},
       }),
     )
-    // return () => {
-    //   dispatch(postActions.resetPosts())
-    // }
   }, [])
 
   const renderPosts = () => {
@@ -87,9 +83,13 @@ const Posts = () => {
         category,
         subcategory,
       }) => {
-        const onTitleClick = () =>
+        const onTitleClick = useCallback(() => {
           navigate(`/${category}/${subcategory}/${postUrl}`)
-        const onEdit = () => navigate(`/postform/${postUrl}`)
+        }, [category, subcategory, postUrl])
+
+        const onEdit = useCallback(() => {
+          navigate(`/postform/${postUrl}`)
+        }, [postUrl])
 
         const onDelete = async (postId) => {
           const post = posts.find((post) => post._id === postId)
@@ -179,7 +179,6 @@ const Posts = () => {
       },
     )
   }
-  const addNew = () => navigate('/postform')
 
   return (
     <>

@@ -1,11 +1,4 @@
-import {
-  categorySelectors,
-  keywordActions,
-  keywordSelectors,
-  loginSelectors,
-  postActions,
-  postSelectors,
-} from '@just4dev/services'
+import { keywordActions, postActions } from '@just4dev/services'
 import Button from '@material-ui/core/Button'
 import Container from '@material-ui/core/Container'
 import { navigate } from '@reach/router'
@@ -16,30 +9,30 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { withTheme } from 'react-jsonschema-form'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { Theme as MuiTheme } from 'rjsf-material-ui'
+import { useAuth } from '../hooks/useAuth'
+import { useCategories } from '../hooks/useCategories'
+import { useKeywords } from '../hooks/useKeywords'
+import { usePostForm } from '../hooks/usePostForm'
 import { sanitizeString } from '../utils/common'
 
 const PostForm = ({ id }) => {
   const dispatch = useDispatch()
   const Form = withTheme(MuiTheme)
 
-  const authenticated = useSelector(loginSelectors.loginSelector)
-  const keywords = useSelector(keywordSelectors.keywordSelector) || []
-  const record = id ? useSelector(postSelectors.postByPostUrlSelector)(id) : {}
+  useAuth()
+  const { keywords } = useKeywords()
+  const { record } = usePostForm({ id })
 
   const [formData, setFormData] = useState(record)
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
 
   const { content, priority, category } = record
 
-  const { categories = [] } = useSelector(categorySelectors.categorySelector)
+  const { categories } = useCategories()
   const catListId = categories.map((cat) => cat.categoryId)
   const catListNames = categories.map((cat) => cat.categoryTitle)
-
-  useEffect(() => {
-    if (!authenticated) navigate(`/`)
-  }, [authenticated])
 
   const editor = useRef(null)
   const focusEditor = () => {
@@ -49,18 +42,6 @@ const PostForm = ({ id }) => {
   }
 
   useEffect(() => focusEditor(), [])
-
-  useEffect(() => {
-    if (!record._id) {
-      dispatch(
-        postActions.handlePosts({
-          operation: 'read',
-          modelType: 'post',
-          query: { postUrl: id },
-        }),
-      )
-    }
-  }, [record._id])
 
   useEffect(() => {
     if (content) {
@@ -75,19 +56,6 @@ const PostForm = ({ id }) => {
       })
     }
   }, [content, priority, category])
-
-  useEffect(() => {
-    dispatch(
-      keywordActions.handleKeywords({
-        operation: 'read',
-        modelType: 'keyword',
-        query: {},
-      }),
-    )
-    return () => {
-      dispatch(keywordActions.resetKeywords)
-    }
-  }, [])
 
   const getSubcategory = (catId) => {
     if (catId) {
@@ -273,7 +241,7 @@ const PostForm = ({ id }) => {
         info: {
           ...formData,
           postUrl: formData.postUrl
-            .replace(/[^\w\s]/gi, '')
+            //.replace(/[^\w\s]/gi, '')
             .split(' ')
             .join('-')
             .toLowerCase()

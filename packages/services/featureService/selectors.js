@@ -6,3 +6,7 @@ export const featuresByNameSelector = createSelector(
   [features],
   (res) => (name) => res.find((e) => e.name === name),
 )
+export const featuresByIdSelector = createSelector(
+  [features],
+  (res) => (featureId) => res.find((e) => e._id === featureId),
+)

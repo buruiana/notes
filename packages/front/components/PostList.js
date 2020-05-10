@@ -18,6 +18,7 @@ const styles = {
   note: {
     fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
     bottom: '10px',
+    top: '10px',
     color: '#c0c1c2',
     display: 'block',
     fontWeight: '400',
@@ -85,8 +86,7 @@ const PostList = ({ posts, categories }) => {
             />
           </CardHeader>
           <CardBody>
-            <div className={classes.typo}>
-              <div className={classes.note}>Header 1</div>
+            <div>
               <div>{longDescription}</div>
               <div>
                 <Keywords keywords={keywords} />

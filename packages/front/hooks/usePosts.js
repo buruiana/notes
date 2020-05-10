@@ -26,6 +26,7 @@ export const usePosts = ({ cat, subcat, q }) => {
     posts = useSelector(postSelectors.postSelector) || []
     total = useSelector(postSelectors.totalsCatSubCat)({})
   }
+
   return {
     posts,
     total,

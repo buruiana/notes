@@ -1,4 +1,4 @@
-import { featureSelectors } from '@just4dev/services'
+import { featureActions } from '@just4dev/services'
 import Paper from '@material-ui/core/Paper'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -9,16 +9,36 @@ import { DeleteRounded } from '@material-ui/icons'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import EditIcon from '@material-ui/icons/Edit'
 import { navigate } from '@reach/router'
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
+import { useFeatures } from '../hooks/useFeatures'
+
+const addNew = () => navigate('/featureform')
 
 const Features = () => {
-  const features = useSelector(featureSelectors.featureSelector) || []
-  const addNew = () => navigate('/featureform')
+  const dispatch = useDispatch()
+  const { features } = useFeatures()
+
   const renderFeatures = () => {
+    const onEdit = useCallback(
+      (featureId) => {
+        navigate(`/featureform/${featureId}`)
+      },
+      [name],
+    )
+    const onDelete = useCallback((featureId) => {
+      dispatch(
+        featureActions.handleFeatures({
+          operation: 'deleteOne',
+          modelType: 'feature',
+          info: {},
+          query: { _id: featureId },
+        }),
+      )
+    }, [])
     return features.map((feature) => {
       const { _id: featureId, name, active } = feature
-      const onEdit = () => navigate(`/featureform/${name}`)
+
       return (
         <TableRow key={featureId}>
           <TableCell>{name}</TableCell>

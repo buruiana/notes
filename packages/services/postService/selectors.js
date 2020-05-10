@@ -31,9 +31,11 @@ export const totalsCatSubCat = createSelector(
 
     const bySubCat =
       catId && subcatId
-        ? res
-            .find((e) => e._id === catId)
-            .bySubCatCount.find((e) => e.subcategory === subcatId).count
+        ? res.find((e) => e._id === catId) ||
+          { bySubCatCount: {} }.bySubCatCount.find(
+            (e) => e.subcategory === subcatId,
+          ).count ||
+          0
         : 0
     const byCat =
       catId && !subcatId ? res.find((e) => e._id === catId).byCatCount : 0
