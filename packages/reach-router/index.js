@@ -48,6 +48,7 @@ const routes = () => {
       <Suspense fallback={<Loader />}>
         <Router>
           <Home path="/" />
+          <NotFound default path="notfound" />
           <Features path="aFeatures" />
           <Categories path="aCategories" />
           <LoginForm path="login" />
@@ -60,7 +61,6 @@ const routes = () => {
           <Home path="/:cat" />
           <Home path="/:cat/:subcat" />
           <Post path="/:cat/:subcat/:id" />
-          <NotFound default />
         </Router>
       </Suspense>
     </div>

@@ -20,7 +20,6 @@ const Home = ({ cat, subcat, q }) => {
   useSearch({ q })
 
   const { posts, total } = usePosts({ cat, subcat, q })
-  console.log('########## posts', posts)
   const { similarpostsFeature } = useFeatures()
   const { categories } = useCategories()
 

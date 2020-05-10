@@ -122,7 +122,7 @@ const Post = ({ id }) => {
               }}
             />
           )}
-          <div>
+          <div className="keywords">
             <Keywords keywords={keywords} />
           </div>
         </CardBody>

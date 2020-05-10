@@ -88,7 +88,7 @@ const PostList = ({ posts, categories }) => {
           <CardBody>
             <div>
               <div>{longDescription}</div>
-              <div>
+              <div className="keywords">
                 <Keywords keywords={keywords} />
               </div>
             </div>
