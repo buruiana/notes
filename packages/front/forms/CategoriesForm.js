@@ -50,7 +50,7 @@ const Categories = () => {
                     maxLength: 160,
                   },
                   subcategoryMetaRobots: { type: 'string' },
-                  categoryMetaViewport: {
+                  subcategoryMetaViewport: {
                     type: 'string',
                     default: 'width=device-width, initial-scale=1.0',
                   },

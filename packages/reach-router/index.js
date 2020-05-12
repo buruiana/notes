@@ -18,7 +18,9 @@ const NotFound = React.lazy(() => import('@just4dev/front/screens/NotFound'))
 const PostForm = React.lazy(() => import('@just4dev/front/forms/PostForm'))
 const Post = React.lazy(() => import('@just4dev/front/screens/Post'))
 
-const Categories = React.lazy(() => import('@just4dev/front/forms/Categories'))
+const CategoriesForm = React.lazy(() =>
+  import('@just4dev/front/forms/CategoriesForm'),
+)
 
 const Posts = React.lazy(() => import('@just4dev/front/screens/Posts'))
 
@@ -50,7 +52,7 @@ const routes = () => {
           <Home path="/" />
           <NotFound default path="notfound" />
           <Features path="aFeatures" />
-          <Categories path="aCategories" />
+          <CategoriesForm path="aCategories" />
           <LoginForm path="login" />
           <FeatureForm path="featureform/:id" />
           <FeatureForm path="featureform/" />

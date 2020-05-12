@@ -8,7 +8,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import { convertFromRaw } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html'
 import React, { useCallback, useState } from 'react'
-import { Helmet } from 'react-helmet'
 import { useDispatch, useSelector } from 'react-redux'
 import Card from '../comp/Card/Card.js'
 import CardBody from '../comp/Card/CardBody.js'
@@ -58,7 +57,7 @@ const Post = ({ id }) => {
     _id: postId,
     category,
     subcategory,
-    keywords,
+    keywords = [],
   } = post
 
   const { categories = [] } = useSelector(categorySelectors.categorySelector)
@@ -111,9 +110,6 @@ const Post = ({ id }) => {
           <h4 className={classes.cardTitleWhite}>{title}</h4>
           <Breadcrumb category={categoryTitle} subcategory={subcategoryTitle} />
         </CardHeader>
-        {/* <div>
-          <img src={require('../assets/img/pr.png')} width="200" height="100" />
-        </div> */}
         <CardBody>
           {content && (
             <div
@@ -132,11 +128,15 @@ const Post = ({ id }) => {
 
   return (
     <div>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>My Title</title>
+      {/* <Helmet>
+        <meta charSet={getMeta('categoryMetaCharset')} />
+        <meta name="description" content={getMeta('categoryMetaDescription')} />
+        <meta name="keywords" content={getMeta('categoryMetaKeywords')} />
+        <meta name="robots" content={getMeta('categoryMetaRobots')} />
+        <meta name="viewport" content={getMeta('categoryMetaViewport')} />
+        <title>{getMeta('categoryMetaTitle')}</title>
         <link rel="canonical" href="http://mysite.com/example" />
-      </Helmet>
+      </Helmet> */}
       {renderPost()}
       <div className="date-more">
         <span>{new Date(datetime).toDateString()}</span>

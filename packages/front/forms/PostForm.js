@@ -30,7 +30,7 @@ const PostForm = ({ id }) => {
 
   const { content, priority, category } = record
 
-  const { categories } = useCategories()
+  const { categories } = useCategories({})
   const catListId = categories.map((cat) => cat.categoryId)
   const catListNames = categories.map((cat) => cat.categoryTitle)
 
@@ -124,15 +124,22 @@ const PostForm = ({ id }) => {
         enum: [],
         enumNames: [],
       },
-      keywords: {
+      priority: { type: 'number' },
+      postUrl: { type: 'string' },
+      postMetaKeywords: {
         type: 'array',
         items: {
           type: 'object',
           properties: { name: { type: 'string' } },
         },
       },
-      priority: { type: 'number' },
-      postUrl: { type: 'string' },
+      postMetaTitle: { type: 'string', maxLength: 60 },
+      postMetaDescription: { type: 'string', maxLength: 160 },
+      postMetaRobots: { type: 'string' },
+      postMetaViewport: {
+        type: 'string',
+        default: 'width=device-width, initial-scale=1.0',
+      },
     },
   }
 
@@ -154,7 +161,7 @@ const PostForm = ({ id }) => {
       'ui:widget': 'textarea',
     },
     category: {},
-    keywords: { items: { name: {} } },
+    postMetaKeywords: { items: { name: {} } },
   }
 
   if (formData.category) {

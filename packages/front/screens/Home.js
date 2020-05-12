@@ -21,8 +21,9 @@ const Home = ({ cat, subcat, q }) => {
 
   const { posts, total } = usePosts({ cat, subcat, q })
   const { similarpostsFeature } = useFeatures()
-  const { categories } = useCategories()
+  const { categories, meta } = useCategories({ cat, subcat })
 
+  const prefix = cat && subcat ? 'sub' : ''
   const showPagination = posts.length < total
 
   const onClickMore = useCallback(() => {
@@ -39,11 +40,17 @@ const Home = ({ cat, subcat, q }) => {
     )
   }, [posts.length])
 
+  const getMeta = (type) => meta[`${prefix}${type}`] || ''
+
   return (
     <Container maxWidth="xl">
       <Helmet>
-        <meta charSet="utf-8" />
-        <title>My Title</title>
+        <meta charSet={getMeta('categoryMetaCharset')} />
+        <meta name="description" content={getMeta('categoryMetaDescription')} />
+        <meta name="keywords" content={getMeta('categoryMetaKeywords')} />
+        <meta name="robots" content={getMeta('categoryMetaRobots')} />
+        <meta name="viewport" content={getMeta('categoryMetaViewport')} />
+        <title>{getMeta('categoryMetaTitle')}</title>
         <link rel="canonical" href="http://mysite.com/example" />
       </Helmet>
       <Grid item xs={12}>

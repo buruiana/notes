@@ -14,6 +14,7 @@ export const postByPostUrlSelector = createSelector([posts], (res) => (key) =>
 export const postByCat = createSelector([posts], (res) => (catId) =>
   res.filter((e) => e.category.toLowerCase() === catId.toLowerCase()),
 )
+
 export const postByCatSubCat = createSelector(
   [posts],
   (res) => (catId, subcatId) =>

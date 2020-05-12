@@ -28,7 +28,7 @@ const addNew = () => navigate('/postform')
 const Posts = () => {
   const dispatch = useDispatch()
   const posts = useSelector(postSelectors.postSelector) || []
-  const { categories } = useCategories()
+  const { categories } = useCategories({})
   const { keywords: allKeywords } = useKeywords()
 
   useAuth()
