@@ -135,6 +135,7 @@ const PostForm = ({ id }) => {
       },
       postMetaTitle: { type: 'string', maxLength: 60 },
       postMetaDescription: { type: 'string', maxLength: 160 },
+      postMetaCharSet: { type: 'string', default: 'UTF-8' },
       postMetaRobots: { type: 'string' },
       postMetaViewport: {
         type: 'string',
@@ -173,7 +174,7 @@ const PostForm = ({ id }) => {
   }
 
   const upsertKeywords = ({ formData }) => {
-    formData.keywords.map((k) => {
+    formData.postMetaKeywords.map((k) => {
       const sanitizedKeyword = sanitizeString(k.name)
       const existingKeyword = keywords.find(
         (e) => sanitizeString(e.name) === sanitizedKeyword,
@@ -204,7 +205,7 @@ const PostForm = ({ id }) => {
   }
 
   const cleanKeywords = () => {
-    record.keywords.map((keyword) => {
+    record.postMetaKeywords.map((keyword) => {
       const data = keywords.find(
         (e) => sanitizeString(e.name) === sanitizeString(keyword.name),
       )

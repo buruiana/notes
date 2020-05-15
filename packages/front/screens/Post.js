@@ -8,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { convertFromRaw } from 'draft-js'
 import { stateToHTML } from 'draft-js-export-html'
 import React, { useCallback, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import { useDispatch, useSelector } from 'react-redux'
 import Card from '../comp/Card/Card.js'
 import CardBody from '../comp/Card/CardBody.js'
@@ -57,7 +58,12 @@ const Post = ({ id }) => {
     _id: postId,
     category,
     subcategory,
-    keywords = [],
+    postMetaKeywords = [],
+    postMetaTitle,
+    postMetaDescription,
+    postMetaRobots,
+    postMetaViewport,
+    postMetaCharSet,
   } = post
 
   const { categories = [] } = useSelector(categorySelectors.categorySelector)
@@ -76,11 +82,12 @@ const Post = ({ id }) => {
     )
   }, [likes.count, likes._id])
 
-  const { categoryTitle, subcategoryTitle } = getCategoryName({
-    category,
-    subcategory,
-    categories,
-  })
+  const { categoryTitle = null, subcategoryTitle = null } =
+    getCategoryName({
+      category,
+      subcategory,
+      categories,
+    }) || {}
 
   const onDeleteComment = useCallback((_id) => {
     dispatch(
@@ -119,24 +126,26 @@ const Post = ({ id }) => {
             />
           )}
           <div className="keywords">
-            <Keywords keywords={keywords} />
+            <Keywords keywords={postMetaKeywords} />
           </div>
         </CardBody>
       </Card>
     )
   }
 
+  const metaKeywordsList = () => postMetaKeywords.map((e) => e.name)
+
   return (
     <div>
-      {/* <Helmet>
-        <meta charSet={getMeta('categoryMetaCharset')} />
-        <meta name="description" content={getMeta('categoryMetaDescription')} />
-        <meta name="keywords" content={getMeta('categoryMetaKeywords')} />
-        <meta name="robots" content={getMeta('categoryMetaRobots')} />
-        <meta name="viewport" content={getMeta('categoryMetaViewport')} />
-        <title>{getMeta('categoryMetaTitle')}</title>
+      <Helmet>
+        <meta charSet={postMetaCharSet} />
+        <meta name="description" content={postMetaDescription} />
+        <meta name="keywords" content={metaKeywordsList()} />
+        <meta name="robots" content={postMetaRobots} />
+        <meta name="viewport" content={postMetaViewport} />
+        <title>{postMetaTitle}</title>
         <link rel="canonical" href="http://mysite.com/example" />
-      </Helmet> */}
+      </Helmet>
       {renderPost()}
       <div className="date-more">
         <span>{new Date(datetime).toDateString()}</span>

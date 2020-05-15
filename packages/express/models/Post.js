@@ -12,6 +12,12 @@ const PostSchema = new mongoose.Schema({
   category: { type: String, required: false },
   subcategory: { type: String, required: false },
   priority: { type: String, required: false },
+  postMetaKeywords: { type: Array, required: false },
+  postMetaTitle: { type: String, required: false },
+  postMetaDescription: { type: String, required: false },
+  postMetaRobots: { type: String, required: false },
+  postMetaViewport: { type: String, required: false },
+  postMetaCharSet: { type: String, required: false },
 })
 
 module.exports = mongoose.model('Post', PostSchema)
